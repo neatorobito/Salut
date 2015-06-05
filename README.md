@@ -1,6 +1,18 @@
 # Salut
 Salut is a wrapper around the WiFi Direct service discovery API in Android. Before using Salut, you should at least skim over some of the documentation and recommended reading below. The library supports API 16 (Android 4.1 Jelly Bean) and up. Technically, WiFi direct is supported on Android 4.0, but it is more reliable on 4.0 and up.
 
+###Table of Contents
+[Dependencies](#dependencies)  
+[Installation]()    
+[Usage]()  
+  * Getting started
+  * Working with services
+  * Sending data
+  * Receiving data
+  * Cleaning up
+
+
+###Recommended Reading
 [General Overview](http://developer.android.com/guide/topics/connectivity/wifip2p.html)  
 [Service Discovery](http://developer.android.com/training/connect-devices-wirelessly/nsd-wifi-direct.html)  
 [Power Consumption](http://www.drjukka.com/blog/wordpress/?p=95)  
@@ -70,7 +82,7 @@ Passing in your activity as the first argument takes care of registering a broad
     });
     
 ```
-###Working with services.
+###Working with services
 Once you have your instance, you can create or discover WiFi direct services.
 
 ###HOST
