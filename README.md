@@ -9,10 +9,10 @@ Salut is a wrapper around the WiFi Direct Service discovery API in Android. Befo
 This library is currently in beta so functionality or APIs are subject to change.
 
 ##Dependencies
-This library depends on:
-[LoganSquare (Serialization)](https://github.com/bluelinelabs/LoganSquare)
-[AsyncJob Library](https://github.com/Arasthel/AsyncJobLibrary)
-**You must also include LoganSquare in your project in order to unserialize data.**
+This library depends on:  
+[LoganSquare (Serialization)](https://github.com/bluelinelabs/LoganSquare)  
+[AsyncJob Library](https://github.com/Arasthel/AsyncJobLibrary)  
+**You must include LoganSquare in your project in order to unserialize data.**
 
 ##Installation
 
@@ -210,10 +210,11 @@ WiFi Direct is a really cool concept, bu the APIs on Android make about as much 
 
 ## TODO
 
-Handshake on device data transfer.
-Improve reliability of data transfer.
-Create threads to deal with data transfer instead of backlogging.
-Remember if WiFi was enabled beforehand.
+Handshake on device data transfer.  
+Improve reliability of data transfer.  
+Create threads to deal with data transfer instead of backlogging.  
+Remember if WiFi was enabled beforehand.  
+Make data serialization modular. (Any library or method can be used.)
 
 ## License
 
