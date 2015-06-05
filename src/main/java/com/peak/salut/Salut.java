@@ -572,8 +572,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group) {
-                if(group != null && group.isGroupOwner())
-                {
+                if (group != null && group.isGroupOwner()) {
                     manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
                         @Override
                         public void onSuccess() {
@@ -899,8 +898,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                 Log.d(TAG, "Service discovery has failed. Reason Code: " + arg0);
                 if (arg0 == WifiP2pManager.P2P_UNSUPPORTED)
                     deviceNotSupported.call();
-                if(arg0 == WifiP2pManager.NO_SERVICE_REQUESTS)
-                {
+                if (arg0 == WifiP2pManager.NO_SERVICE_REQUESTS) {
                     disableWiFi(dataReceiver.currentContext);
                     enableWiFi(dataReceiver.currentContext);
                 }
@@ -942,32 +940,35 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
     public void stopNetworkService(final boolean disableWiFi)
     {
-        isRunningAsHost = false;
-        registeredHost = null;
-        stopServiceDiscovery();
+        if(serviceIsRunning)
+        {
+            isRunningAsHost = false;
+            registeredHost = null;
+            stopServiceDiscovery();
 
-        if (manager != null && channel != null && serviceInfo != null) {
+            if (manager != null && channel != null && serviceInfo != null) {
 
-            manager.removeLocalService(channel, serviceInfo, new WifiP2pManager.ActionListener() {
-                @Override
-                public void onFailure(int reason) {
-                    Log.d(TAG, "Could not end the service. Reason : " + reason);
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "Successfully shutdown service.");
-                    if(disableWiFi)
-                    {
-                        disableWiFi(dataReceiver.currentContext); //To give time for the requests to be disposed.
+                manager.removeLocalService(channel, serviceInfo, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onFailure(int reason) {
+                        Log.d(TAG, "Could not end the service. Reason : " + reason);
                     }
-                    serviceIsRunning = false;
-                }
-            });
 
-            respondersAlreadySet = false;
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "Successfully shutdown service.");
+                        if(disableWiFi)
+                        {
+                            disableWiFi(dataReceiver.currentContext); //To give time for the requests to be disposed.
+                        }
+                        serviceIsRunning = false;
+                    }
+                });
+
+                respondersAlreadySet = false;
+            }
+
         }
-
     }
 
     public void stopServiceDiscovery()
