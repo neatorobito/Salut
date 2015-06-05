@@ -107,7 +107,7 @@ There are several methods to discover services.
 ```
 For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **With each of these methods, you must also manually call `stopServiceDiscovery()`.**
 
-Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the list of found devices using the `foundDevices`** field of your instance.
+Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the entire list of found devices using the `foundDevices` field of your instance.**
 
 ```
     network.discoverNetworkServicesWithTimeout(new SalutCallback() {
