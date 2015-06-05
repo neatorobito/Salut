@@ -83,6 +83,8 @@ Once you have your instance, you can create or discover WiFi direct services.
     });
 ```
 
+When a device connects and is successfully registered, this callback will be fired. You can access the entire list of registered clients using the field `registeredClients`.
+
 ###CLIENT
 There are several methods to discover services.
 
@@ -108,7 +110,7 @@ For both of these methods you must pass in a boolean indicating wether or not yo
 Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the list of found devices using the `foundDevices`** field of your instance.
 
 ```
-    Mixen.network.discoverNetworkServicesWithTimeout(new SalutCallback() {
+    network.discoverNetworkServicesWithTimeout(new SalutCallback() {
         @Override
         public void call() {
             Log.d(TAG, "Look at all these devices! " + network.foundDevices.toString());
@@ -121,11 +123,23 @@ Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it'
     }, 5000);
 ```
 
+When a device finds a prospective host, you must then call the `registerWithHost()` method.
+```
+    network.registerWithHost(possibleHost, new SalutCallback() {
+        @Override
+        public void call() {
+            Log.d(TAG, "We're now registered.");
+        }
+    }, new SalutCallback() {
+        @Override
+        public void call() {
+            Log.d(TAG, "We failed to register.");
+        }
+    });
+```
+
 
 ###Sending data
-
-When a device connects finds and connects to the host, it will register with said host and
-then fire this callback when registered giving you access to the device as well.
 
 After clients have registered with the host, you can then invoke methods to send data to a client. On success, the data will obviously be sent and received on the other side, so there is no reason for a callback. So, sending data methods only provide failure callbacks.
 
@@ -182,7 +196,7 @@ Regardless of the whatever method you choosing, parsing the data to get it back 
         }
         catch (IOException ex)
         {
-            Log.e(Mixen.TAG, "Failed to parse network data.");
+            Log.e(TAG, "Failed to parse network data.");
         }
     }
 ```
