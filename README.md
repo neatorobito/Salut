@@ -10,8 +10,9 @@ This library is currently in beta so functionality or APIs are subject to change
 
 ##Dependencies
 This library depends on:
-[LoganSquare (Serialization)](https://github.com/bluelinelabs/LoganSquare) You must also include LoganSquare in your project in order to unserialize data.  
+[LoganSquare (Serialization)](https://github.com/bluelinelabs/LoganSquare)
 [AsyncJob Library](https://github.com/Arasthel/AsyncJobLibrary)
+**You must also include LoganSquare in your project in order to unserialize data.**
 
 ##Installation
 
