@@ -9,8 +9,7 @@ Salut is a wrapper around the WiFi Direct Service discovery API in Android. Befo
 This library is currently in beta so functionality or APIs are subject to change.
 
 ###Why the name? What does it mean?
-Salut is a French greeting. It's another way to say hello or goodbye.  
-Apple's technology to do something similar thing is called Bonjour.
+Salut is a French greeting. It's another way to say hello or goodbye. Apple's technology to do something similar thing is called Bonjour.
 
 ##Dependencies
 This library depends on:  
