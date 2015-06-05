@@ -1,6 +1,5 @@
 package com.peak.salut;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -57,9 +56,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
     //Service Objects
     public SalutDevice thisDevice;
-    public boolean serviceIsRunning = false;
     public SalutDevice registeredHost;
-    protected boolean isRunningAsHost = false;
+    public boolean isRunningAsHost = false;
     private ServerSocket listenerServiceSocket;
     private Socket listeningSocket;
 
@@ -642,7 +640,6 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             public void onSuccess() {
                 Log.d(TAG, "Successfully created " + thisDevice.serviceName + " service running on port " + thisDevice.servicePort);
                 manager.createGroup(channel, null);
-                serviceIsRunning = true;
                 isRunningAsHost = true;
             }
 
@@ -940,7 +937,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
     public void stopNetworkService(final boolean disableWiFi)
     {
-        if(serviceIsRunning)
+        if(isRunningAsHost)
         {
             isRunningAsHost = false;
             registeredHost = null;
@@ -961,13 +958,17 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                         {
                             disableWiFi(dataReceiver.currentContext); //To give time for the requests to be disposed.
                         }
-                        serviceIsRunning = false;
+                        isRunningAsHost = false;
                     }
                 });
 
                 respondersAlreadySet = false;
             }
 
+        }
+        else
+        {
+            Log.e(TAG, "Network service is not running.");
         }
     }
 
