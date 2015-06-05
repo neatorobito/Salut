@@ -76,7 +76,7 @@ Then, we need to create a SalutDataReceiver and a SalutServiceData object.
 ```
 `SalutDataReceiver` takes two arguments,`(Activity activity, SalutDataCallback dataCallback)`. In the example above, our activity implements `SalutDataCallback`, so we pass it in twice. Passing in an activity in general allows Salut to automatically register and unregister the neccessary broadcast receivers for you app.
 
-`SalutServiceData` takes in a service name, which should be lowercase, a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic.
+`SalutServiceData` takes in a service name (which should be lowercase), a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic.
 
 Finally, create a `Salut` instance.
 
@@ -94,7 +94,7 @@ Finally, create a `Salut` instance.
 ###Working with services
 Once you have your instance, you can create or discover WiFi direct services.
 
-###HOST
+####HOST
 ```
     network.startNetworkService(new SalutDeviceCallback() {
         @Override
@@ -106,7 +106,7 @@ Once you have your instance, you can create or discover WiFi direct services.
 
 When a device connects and is successfully registered, this callback will be fired. You can access the entire list of registered clients using the field `registeredClients`.
 
-###CLIENT
+####CLIENT
 There are several methods to discover services.
 
 ```
@@ -126,7 +126,7 @@ There are several methods to discover services.
         }
     }, true);
 ```
-For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **With each of these methods, you must also manually call `stopServiceDiscovery()`.**
+For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **With each of these methods, you must also manually call `stopServiceDiscovery()` to stop service discovery.**
 
 Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the entire list of found devices using the `foundDevices` field of your instance.**
 
@@ -173,7 +173,7 @@ After clients have registered with the host, you can then invoke methods to send
     });
 ```
 
-Only the host, which has the addresses of all devices may invoke the above method. There are methods for clients however.
+Only the host, which has the addresses of all devices may invoke the above method. There are methods for clients as well.
 
 ```
     network.sendToDevice(deviceToSendTo, myData, new SalutCallback() {
@@ -193,7 +193,7 @@ Only the host, which has the addresses of all devices may invoke the above metho
 ```
 
 ###Receiving data
-When your class implements the SalutDataCallback interface, it must override the `onDataReceived(Object)` method. **If you want to update the UI in this method, be sure to use    `runOnUiThread`.**
+When your class implements the SalutDataCallback interface, it must override the `onDataReceived(Object data)` method. **If you want to update the UI in this method, be sure to use `runOnUiThread`.**
 
 **Data is sent between devices as serialized strings, and is recieved in this method as a `String`. To get it back to reality, you must parse it using LoganSquare.**
 
@@ -203,7 +203,7 @@ This is particularly useful because it means that you can create a sort of God o
 
 Or, you can add a header to the string indicating it's type and then strip the header from the string in the `onDataReceived()` method and parse the resulting object accordlingly.
 
-Regardless of the whatever method you choosing, parsing the data to get it back to another object will look like following.
+Regardless of the whatever method you choose to define serialized data, parsing the data to get it back to another object will look like following.
 
 ```
     @Override
@@ -236,10 +236,10 @@ Regardless of the whatever method you choosing, parsing the data to get it back 
     }
 ```
 
-###HOST
+####HOST
 **When cleaning up host side, you must call `stopNetworkService`.** You must also pass in a 
 boolean indicating whether or not you want to disable WiFi.
-###CLIENT
+####CLIENT
 **When cleaning up client side, you must call `unregisterClient`.** You can optionally pass in a callback to be fired on failure to unregister.
 
 ## Contributing
