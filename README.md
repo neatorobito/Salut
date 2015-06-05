@@ -1,23 +1,19 @@
 # Salut
-
-Salut is a wrapper around the WiFi Direct Service discovery API in Android. Before using Salut, you should at least skim over the documentation below. The library supports API 16 (Android 4.1 Jelly Bean) and up. Technically, WiFi direct is supported on Android 4.0, but it is more reliable on 4.0 and up.
-
-[General Overview](http://developer.android.com/guide/topics/connectivity/wifip2p.html)
-[Service Discovery](http://developer.android.com/training/connect-devices-wirelessly/nsd-wifi-direct.html)
+Salut is a wrapper around the WiFi Direct Service discovery API in Android. Before using Salut, you should at least skim over some of the documentation and recommended reading below. The library supports API 16 (Android 4.1 Jelly Bean) and up. Technically, WiFi direct is supported on Android 4.0, but it is more reliable on 4.0 and up.  
+[General Overview](http://developer.android.com/guide/topics/connectivity/wifip2p.html)  
+[Service Discovery](http://developer.android.com/training/connect-devices-wirelessly/nsd-wifi-direct.html)  
+[Power Consumption](http://www.drjukka.com/blog/wordpress/?p=95)  
 [More Recommended Reading](http://www.drjukka.com/blog/wordpress/?p=81)
-[Power Consumption](http://www.drjukka.com/blog/wordpress/?p=95)
 
 ###WARNING
 This library is currently in beta so functionality or APIs are subject to change.
 
-## Dependencies
-
+##Dependencies
 This library depends on:
-[LoganSquare (Serialization)](https://github.com/bluelinelabs/LoganSquare)
-###You must also include LoganSquare in your project in order to unserialize data.
+[LoganSquare (Serialization)](https://github.com/bluelinelabs/LoganSquare) You must also include LoganSquare in your project in order to unserialize data.  
 [AsyncJob Library](https://github.com/Arasthel/AsyncJobLibrary)
 
-## Installation
+##Installation
 
 To install the library simply download the AAR from [here](http://google.com), and add it as well as LoganSquare to your project's build.gradle file.
 
@@ -53,7 +49,8 @@ Passing in your activity as the first argument takes care of registering a broad
     SalutDataReceiver dataReceiver = new SalutDataReceiver(myActivity, myActivity);
 
     /*The SalutServiceData takes in a service name, which should be lowercase,
-      a port, and an instance name. The instance name is basically a readable name that               will be shown to users. So it's good to make this something not cryptic. */
+      a port, and an instance name. The instance name is basically a readable name that will be shown to users. 
+      So it's good to make this something not cryptic. */
 
     SalutServiceData serviceData = new SalutServiceData("superAwesomeService", 50489, superAwesomeUser.name);
 
@@ -101,10 +98,8 @@ There are several methods to discover services.
         }
     }, true);
 ```
-
-For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, then the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **With each of these methods, you must also manually call `stopServiceDiscovery()`.**
-
-Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the list of found devices using the **`foundDevices`** field of your instance.
+For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **With each of these methods, you must also manually call `stopServiceDiscovery()`.**  
+Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the list of found devices using the `foundDevices`** field of your instance.
 
 ```
     Mixen.network.discoverNetworkServicesWithTimeout(new SalutCallback() {
@@ -163,7 +158,7 @@ When your class implements the SalutDataCallback interface, it must override the
 
 Data is received as a string so that you can parse it yourself instead of Salut doing it for you.
 
-This is particularly useful because it means that you can create a sort of God object that will hold all your data types and is serializable. *(See LoganSquare's pages [here](https://github.com/bluelinelabs/LoganSquare/blob/master/docs/Models.md) and [here](https://github.com/bluelinelabs/LoganSquare/blob/master/docs/TypeConverters.md)for more information on this, it supports many built-in types.)* 
+This is particularly useful because it means that you can create a sort of God object that will hold all your data types and is serializable. *(See LoganSquare's pages [here](https://github.com/bluelinelabs/LoganSquare/blob/master/docs/Models.md) and [here](https://github.com/bluelinelabs/LoganSquare/blob/master/docs/TypeConverters.md) for more information on this, it supports many built-in types.)* 
 
 Or, you can add a header to the string indicating it's type and then strip the header from the string in the `onDataReceived()` method and parse the resulting object accordlingly.
 
@@ -201,7 +196,6 @@ Or, you can add a header to the string indicating it's type and then strip the h
 ###HOST
 **When cleaning up host side, you must call `stopNetworkService`.** You must also pass in a 
 boolean indicating whether or not you want to disable WiFi.
-
 ###CLIENT
 **When cleaning up client side, you must call `unregisterClient`.** You can optionally pass in a callback to be fired on failure to unregister.
 
