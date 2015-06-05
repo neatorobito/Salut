@@ -166,6 +166,8 @@ This is particularly useful because it means that you can create a sort of God o
 
 Or, you can add a header to the string indicating it's type and then strip the header from the string in the `onDataReceived()` method and parse the resulting object accordlingly.
 
+Regardless of the whatever method you choosing, parsing the data to get it back to another object will look like following.
+
 ```
     @Override
     public void onDataReceived(Object data) {
