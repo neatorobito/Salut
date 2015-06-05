@@ -67,26 +67,24 @@ First, add the following two permissions to your AndroidManifest.xml.
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-Next, start by implementing the SalutDataCallback in the class that you would like to receive data. Then, we need to create a SalutDataReceiver and a SalutServiceData object.
+Next, start by implementing the SalutDataCallback in the class that you would like to receive data. 
 
-SalutDataReceiver takes two arguments, `(Activity activity, SalutDataCallback dataCallback)`. In the example below, our activity implements `SalutDataCallback`. Passing in an activity allows Salut to automatically register and unregister the neccessary broadcast receivers for you app.
-
+Then, we need to create a SalutDataReceiver and a SalutServiceData object.
 ```
     SalutDataReceiver dataReceiver = new SalutDataReceiver(myActivity, myActivity);
-
-    /*The SalutServiceData takes in a service name, which should be lowercase,
-      a port, and an instance name. The instance name is basically a readable name that will be shown to users. 
-      So it's good to make this something not cryptic. */
-
     SalutServiceData serviceData = new SalutServiceData("superAwesomeService", 50489, superAwesomeUser.name);
+```
+SalutDataReceiver takes two arguments,`(Activity activity, SalutDataCallback dataCallback)`. In the example below, our activity implements `SalutDataCallback`. Passing in an activity allows Salut to automatically register and unregister the neccessary broadcast receivers for you app. The `SalutServiceData` class takes in a service name, which should be lowercase, a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic.
 
-    //Finally, create an instance.
+Finally, create a `Salut` instance.
+
+```
     Salut network = new Salut(dataReceiver, serviceData, new SalutCallback() {
         @Override
         public void call() {
             wiFiFailureDiag.show();
             //OR
-            Log.d(TAG, "Sorry, but this device does not support WiFi Direct.");
+            Log.e(TAG, "Sorry, but this device does not support WiFi Direct.");
         }
     });
     
