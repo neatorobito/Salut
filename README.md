@@ -226,7 +226,7 @@ Regardless of the whatever method you choose to define serialized data, parsing 
 
 **Last, but certainly not least, it's good practice to keep a variable specific to your application indicating whether or not that instance is the host. The boolean field `isRunningAsHost` does indicate if you're running as the host, but this is only based on whether or not the framework is connected to a device as the group owner and the host server is running.**
 
-**There may obviously be other scenariors in which your app hasn't quite started a network service yet, but is still the host. The following methods will handle clean up.**
+**There are obviously other scenarios in which an instance of your app may have not yet started a network service, but could still be considered the host. The following methods will handle clean up.**
 
 ```
     @Override
