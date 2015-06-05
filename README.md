@@ -123,7 +123,7 @@ Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it'
     }, 5000);
 ```
 
-When a device finds a prospective host, you must then call the `registerWithHost()` method.
+Finally, when a device finds a prospective host, you must then call the `registerWithHost()` method.
 ```
     network.registerWithHost(possibleHost, new SalutCallback() {
         @Override
