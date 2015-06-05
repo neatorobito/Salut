@@ -74,7 +74,7 @@ Then, we need to create a SalutDataReceiver and a SalutServiceData object.
     SalutDataReceiver dataReceiver = new SalutDataReceiver(myActivity, myActivity);
     SalutServiceData serviceData = new SalutServiceData("superAwesomeService", 50489, superAwesomeUser.name);
 ```
-SalutDataReceiver takes two arguments,`(Activity activity, SalutDataCallback dataCallback)`. In the example below, our activity implements `SalutDataCallback`. Passing in an activity allows Salut to automatically register and unregister the neccessary broadcast receivers for you app. The `SalutServiceData` class takes in a service name, which should be lowercase, a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic.
+SalutDataReceiver takes two arguments,`(Activity activity, SalutDataCallback dataCallback)`. In the example above, our activity implements `SalutDataCallback`. Passing in an activity allows Salut to automatically register and unregister the neccessary broadcast receivers for you app. The `SalutServiceData` class takes in a service name, which should be lowercase, a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic.
 
 Finally, create a `Salut` instance.
 
