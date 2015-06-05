@@ -59,7 +59,7 @@ To install the library simply download the AAR from [here](https://github.com/ma
 
 ###Getting started
 
-First, add the following two permissions to your AndroidManifest.xml.
+First, add the following permissions to your AndroidManifest.xml.
 ```
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
