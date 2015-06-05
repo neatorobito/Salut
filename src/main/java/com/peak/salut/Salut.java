@@ -8,7 +8,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
@@ -22,20 +21,12 @@ import android.util.Log;
 import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.peak.salut.Callbacks.SalutCallback;
-import com.peak.salut.Callbacks.SalutDataCallback;
 import com.peak.salut.Callbacks.SalutDeviceCallback;
 
-import java.io.BufferedReader;
-import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -93,23 +84,23 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
 
 
-    public Salut(SalutDataReceiver dataReceiver, Map<String, String> serviceData, SalutCallback deviceNotSupported)
+    public Salut(SalutDataReceiver dataReceiver, SalutServiceData salutServiceData,SalutCallback deviceNotSupported)
     {
         WifiManager wifiMan = (WifiManager) dataReceiver.currentContext.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiMan.getConnectionInfo();
 
         this.dataReceiver = dataReceiver;
         this.deviceNotSupported = deviceNotSupported;
-        this.TTP = serviceData.get("SERVICE_NAME") + TTP;
+        this.TTP = salutServiceData.serviceData.get("SERVICE_NAME") + TTP;
 
         thisDevice = new SalutDevice();
-        thisDevice.serviceName = serviceData.get("SERVICE_NAME");
-        thisDevice.readableName = serviceData.get("INSTANCE_NAME");
-        thisDevice.instanceName = serviceData.get("INSTANCE_NAME") + "-" + wifiInfo.getMacAddress().hashCode();
+        thisDevice.serviceName = salutServiceData.serviceData.get("SERVICE_NAME");
+        thisDevice.readableName = salutServiceData.serviceData.get("INSTANCE_NAME");
+        thisDevice.instanceName = salutServiceData.serviceData.get("INSTANCE_NAME") + "-" + wifiInfo.getMacAddress().hashCode();
         thisDevice.macAddress = wifiInfo.getMacAddress();
         thisDevice.TTP = thisDevice.serviceName + TTP;
-        thisDevice.servicePort = Integer.valueOf(serviceData.get("SERVICE_PORT"));
-        thisDevice.txtRecord = serviceData;
+        thisDevice.servicePort = Integer.valueOf(salutServiceData.serviceData.get("SERVICE_PORT"));
+        thisDevice.txtRecord = salutServiceData.serviceData;
 
         foundDevices = new ArrayList<>();
 
@@ -478,7 +469,10 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         {
             sendData(registeredHost, data, onFailure);
         }
-
+        else
+        {
+            Log.e(TAG, "You must be running as a client to invoke this method.");
+        }
     }
 
     public void sendToDevice(final SalutDevice device, final Object data, final SalutCallback onFailure)
@@ -662,7 +656,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         });
     }
 
-    public void unregisterClient( @Nullable SalutCallback onFailure)
+    public void unregisterClient(@Nullable SalutCallback onFailure)
     {
         if(onFailure == null)
         {
