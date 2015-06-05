@@ -240,7 +240,7 @@ Feel free to submit issue requests or forks.
 
 ## Motivation
 
-WiFi Direct is a really cool concept, bu the APIs on Android make about as much sense as a pig flying. I've been working on an app that would not be possible without this technology however, and it's taken me forever to get it working but it's very cool. So, I'm interested in what devs can do when they have the right tools.
+WiFi Direct is a really cool concept, but the APIs on Android make about as much sense as a pig flying. I've been working on an app that would not be possible without this technology however, and it's taken me forever to get it working but it's very cool. So, I'm interested in what devs can do when they have the right tools.
 
 ## TODO
 
