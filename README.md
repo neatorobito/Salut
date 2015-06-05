@@ -3,13 +3,13 @@ Salut is a wrapper around the WiFi Direct service discovery API in Android. Befo
 
 ###Table of Contents
 [Dependencies](#dependencies)  
-[Installation]()    
-[Usage]()  
-  * Getting started
-  * Working with services
-  * Sending data
-  * Receiving data
-  * Cleaning up
+[Installation](#installation)    
+[Usage](#usage)  
+  * [Getting started](#getting-started)
+  * [Working with services](#working-with-services)
+  * [Sending data](#sending-data)
+  * [Receiving data](#receiving-data)
+  * [Cleaning up](#cleaning-up)
 
 
 ###Recommended Reading
