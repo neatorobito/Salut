@@ -59,9 +59,15 @@ To install the library simply download the AAR from [here](https://github.com/ma
 
 ###Getting started
 
-First, start by implementing the SalutDataCallback in the class that you would like to receive data. So for instance, an activity called MyActivity that implements SalutDataCallback would be useful. Then, we need to create a SalutDataReceiver and a SalutServiceData object.
+First, add the following two permissions to your AndroidManifest.xml.
+```
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+```
 
-Passing in your activity as the first argument takes care of registering a broadcast receiver for your app.
+Next, start by implementing the SalutDataCallback in the class that you would like to receive data. Then, we need to create a SalutDataReceiver and a SalutServiceData object.
+
+SalutDataReceiver takes two arguments, `(Activity activity, SalutDataCallback dataCallback)`. In the example below, our activity implements `SalutDataCallback`. Passing in an activity allows Salut to automatically register and unregister the neccessary broadcast receivers for you app.
 
 ```
     SalutDataReceiver dataReceiver = new SalutDataReceiver(myActivity, myActivity);
