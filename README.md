@@ -67,9 +67,9 @@ First, add the following permissions to your AndroidManifest.xml.
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-Next, start by implementing the SalutDataCallback in the class that you would like to receive data. 
+Next, start by implementing the `SalutDataCallback` in the class that you would like to receive data. 
 
-Then, we need to create a SalutDataReceiver and a SalutServiceData object.
+Then, we need to create a `SalutDataReceiver` and a `SalutServiceData` object.
 ```
     SalutDataReceiver dataReceiver = new SalutDataReceiver(myActivity, myActivity);
     SalutServiceData serviceData = new SalutServiceData("superAwesomeService", 50489, superAwesomeUser.name);
@@ -224,12 +224,16 @@ Regardless of the whatever method you choose to define serialized data, parsing 
 
 ###Cleaning up
 
+**Last, but certainly not least, it's good practice to keep a variable specific to your application indicating whether or not that instance is the host. The boolean field `isRunningAsHost` does indicate if you're running as the host, but this is only based on whether or not the framework is connected to a device as the group owner and the host server is running.**
+
+**There are obviously other scenarios in which an instance of your app may have not yet started a network service, but could still be considered the host. The following methods will handle clean up.**
+
 ```
     @Override
     public void onDestroy() {
         super.onDestroy();
         
-        if(network.isRunningAsHost)
+        if(MyApp.isHost)
             network.stopNetworkService(true);
         else
             network.unregisterClient(null);
