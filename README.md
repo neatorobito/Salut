@@ -1,5 +1,5 @@
 # Salut
-Salut is a wrapper around the WiFi Direct service discovery API in Android. Before using Salut, you should at least skim over some of the documentation and recommended reading below. The library supports API 16 (Android 4.1 Jelly Bean) and up. Technically, WiFi direct is supported on Android 4.0, but it is more reliable on 4.0 and up.
+Salut is a wrapper around the WiFi Direct service discovery API in Android. Before using Salut, you should at least skim over some of the documentation and recommended reading below. The library supports API 16 (Android 4.1 Jelly Bean) and up. Technically, WiFi direct is supported on Android 4.0, but it is more reliable on 4.1 and up.
 
 ###Table of Contents  
 * [Dependencies](#dependencies)  
@@ -113,21 +113,20 @@ There are several methods to discover services.
     network.discoverNetworkServices(new SalutDeviceCallback() {
         @Override
         public void call(SalutDevice device) {
-
+           Log.d(TAG, "A device has connected with the name " + device.deviceName);
         }
     }, false);
     
     //OR
     
-    network.discoverNetworkServices(new SalutDeviceCallback() {
+    network.discoverNetworkServices(new SalutCallback() {
         @Override
-        public void call(SalutDevice device) {
-
+        public void call() {
+           Log.d(TAG, "All I know is that a device has connected.");
         }
     }, true);
 ```
-For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **With each of these methods, you must also manually call `stopServiceDiscovery()` to stop service discovery.**
-
+For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **Regardless of which boolean you pass in, the framework will continue to discover services until you manually call `stopServiceDiscovery()`.**
 Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the entire list of found devices using the `foundDevices` field of your instance.**
 
 ```
@@ -162,7 +161,7 @@ Finally, when a device finds a prospective host, you must then call the `registe
 
 ###Sending data
 
-After clients have registered with the host, you can then invoke methods to send data to a client. On success, the data will obviously be sent and received on the other side, so there is no reason for a callback. So, sending data methods only provide failure callbacks.
+After clients have registered with the host, you can then invoke methods to send data to a client. On success, the data will obviously be sent and received on the other side, as of yet, onSuccess callbacks have not yet been implemented for this. So, sending data methods only provide failure callbacks.
 
 ```
     network.sendToAllDevices(myData, new SalutCallback() {
