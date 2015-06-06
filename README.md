@@ -67,9 +67,9 @@ First, add the following permissions to your AndroidManifest.xml.
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-Next, start by implementing the SalutDataCallback in the class that you would like to receive data. 
+Next, start by implementing the `SalutDataCallback` in the class that you would like to receive data. 
 
-Then, we need to create a SalutDataReceiver and a SalutServiceData object.
+Then, we need to create a `SalutDataReceiver` and a `SalutServiceData` object.
 ```
     SalutDataReceiver dataReceiver = new SalutDataReceiver(myActivity, myActivity);
     SalutServiceData serviceData = new SalutServiceData("superAwesomeService", 50489, superAwesomeUser.name);
