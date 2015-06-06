@@ -723,8 +723,6 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
-                Log.d(TAG, "Found " + device.deviceName + " " + record.values().toString());
-
                 for(SalutDevice found : foundDevices)
                 {
                     if(found.deviceName.equals(device.deviceName))
@@ -733,9 +731,11 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                     }
                 }
 
-                SalutDevice foundDevice = new SalutDevice(device, record);
-
-                foundDevices.add(foundDevice);
+                if(record.containsValue(thisDevice.serviceName))
+                {
+                    SalutDevice foundDevice = new SalutDevice(device, record);
+                    foundDevices.add(foundDevice);
+                }
             }
         };
 
@@ -767,8 +767,6 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
-                Log.d(TAG, "Found " + device.deviceName +  " " + record.values().toString());
-
                 for(SalutDevice found : foundDevices)
                 {
                     if(found.deviceName.equals(device.deviceName))
@@ -777,17 +775,20 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                     }
                 }
 
-                SalutDevice foundDevice = new SalutDevice(device, record);
+                if(record.containsValue(thisDevice.serviceName))
+                {
+                    SalutDevice foundDevice = new SalutDevice(device, record);
 
-                foundDevices.add(foundDevice);
-                if(!firstDeviceAlreadyFound && !callContinously)
-                {
-                    onDeviceFound.call();
-                    firstDeviceAlreadyFound = true;
-                }
-                else if(firstDeviceAlreadyFound && callContinously)
-                {
-                    onDeviceFound.call();
+                    foundDevices.add(foundDevice);
+                    if(!firstDeviceAlreadyFound && !callContinously)
+                    {
+                        onDeviceFound.call();
+                        firstDeviceAlreadyFound = true;
+                    }
+                    else if(firstDeviceAlreadyFound && callContinously)
+                    {
+                        onDeviceFound.call();
+                    }
                 }
             }
         };
@@ -818,25 +819,26 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
-                Log.d(TAG, "Found " + device.deviceName +  " " + record.values().toString());
-
                 for(SalutDevice found : foundDevices) {
                     if (found.deviceName.equals(device.deviceName)) {
                         return;
                     }
                 }
 
-                SalutDevice foundDevice = new SalutDevice(device, record);
+                if(record.containsValue(thisDevice.serviceName))
+                {
+                    SalutDevice foundDevice = new SalutDevice(device, record);
 
-                foundDevices.add(foundDevice);
-                if(!firstDeviceAlreadyFound && !callContinously)
-                {
-                    onDeviceFound.call(foundDevice);
-                    firstDeviceAlreadyFound = true;
-                }
-                else if(firstDeviceAlreadyFound && callContinously)
-                {
-                    onDeviceFound.call(foundDevice);
+                    foundDevices.add(foundDevice);
+                    if(!firstDeviceAlreadyFound && !callContinously)
+                    {
+                        onDeviceFound.call(foundDevice);
+                        firstDeviceAlreadyFound = true;
+                    }
+                    else if(firstDeviceAlreadyFound && callContinously)
+                    {
+                        onDeviceFound.call(foundDevice);
+                    }
                 }
             }
         };
