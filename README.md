@@ -239,6 +239,7 @@ Regardless of the whatever method you choose to define serialized data, parsing 
             network.unregisterClient(null);
     }
 ```
+**Notice that we use our app's specific boolean.**
 
 ####HOST
 **When cleaning up host side, you must call `stopNetworkService`.** You must also pass in a 
