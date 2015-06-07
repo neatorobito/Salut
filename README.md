@@ -104,7 +104,7 @@ Once you have your instance, you can create or discover WiFi direct services.
     });
 ```
 
-When a device connects and is successfully registered, this callback will be fired. You can access the entire list of registered clients using the field `registeredClients`.
+When a device connects and is successfully registered, this callback will be fired. **You can access the entire list of registered clients using the field `registeredClients`.**
 
 ####CLIENT
 There are several methods to discover services.
@@ -126,7 +126,7 @@ There are several methods to discover services.
         }
     }, true);
 ```
-For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **Regardless of which boolean you pass in, the framework will continue to discover services until you manually call `stopServiceDiscovery()`.**
+For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **Regardless of which boolean you pass in, the framework will continue to discover services until you manually call `stopServiceDiscovery()`.**  
 Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the entire list of found devices using the `foundDevices` field of your instance.**
 
 ```
@@ -223,7 +223,7 @@ Regardless of the whatever method you choose to define serialized data, parsing 
 
 ###Cleaning up
 
-**Last, but certainly not least, it's good practice to keep a variable specific to your application indicating whether or not that instance is the host. The boolean field `isRunningAsHost` does indicate if you're running as the host, but this is only based on whether or not the framework is connected to a device as the group owner and the host server is running.**
+**Last, but certainly not least, it's good practice, when working with this library, to keep a variable specific to your application indicating whether or not that instance is the host. The boolean field `isRunningAsHost` does indicate if you're running as the host, but this is only based on whether or not the framework is connected to a device as the group owner and the host server is running.**
 
 **There are obviously other scenarios in which an instance of your app may have not yet started a network service, but could still be considered the host. The following methods will handle clean up.**
 
