@@ -430,7 +430,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group) {
-                if (group != null && group.isGroupOwner()) {
+                if (group != null) {
                     manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
                         @Override
                         public void onSuccess() {
@@ -446,12 +446,6 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                 }
             }
         });
-    }
-
-    protected void clientDisconnectFromDevice()
-    {
-        disableWiFi(dataReceiver.currentContext);
-        isConnectedToAnotherDevice = false;
     }
 
     private void createService(final SalutCallback onFailure) {

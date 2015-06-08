@@ -83,7 +83,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 salutInstance.registeredHost = null;
                 salutInstance.cleanUpDataConnection(false);
                 salutInstance.cleanUpDeviceConnection(false);
-                salutInstance.clientDisconnectFromDevice();
+                salutInstance.disconnectFromDevice();
 
                 Log.d(Salut.TAG, "This device has successfully been unregistered from the server.");
 
