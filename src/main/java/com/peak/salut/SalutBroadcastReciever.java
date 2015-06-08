@@ -45,16 +45,8 @@ public class SalutBroadcastReciever extends BroadcastReceiver {
                 return;
             }
             NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-            if (networkInfo.isConnected()) {
-                //Here, we are connected to another WiFi P2P device, if necessary one can grab some extra information.
-                if(!salutInstance.isRunningAsHost && !salutInstance.thisDevice.isRegistered)
-                {
-                    //If we've reached here it means that the Salut framework was not aware that
-                    //we were previously not connected to a device. Someone may have started the application with a device connected.
-                    salutInstance.disconnectFromDevice();
-                    salutInstance.clientDisconnectFromDevice();
-                }
-
+            if (networkInfo.isConnected() && networkInfo.getTypeName().equals("WIFI_P2P")) {
+                //Here, we are connected to another WiFi P2P device, and will automatically request connection info.
                 salutInstance.isConnectedToAnotherDevice = true;
                 manager.requestConnectionInfo(channel, salutInstance);
 
