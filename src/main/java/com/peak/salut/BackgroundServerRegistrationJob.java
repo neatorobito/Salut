@@ -9,12 +9,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-public class BackgroundRegistrationJob implements AsyncJob.OnBackgroundJob{
+public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob{
 
     private Salut salutInstance;
     private Socket clientSocket;
 
-    public BackgroundRegistrationJob(Salut salutInstance, Socket clientSocket)
+    public BackgroundServerRegistrationJob(Salut salutInstance, Socket clientSocket)
     {
         this.clientSocket = clientSocket;
         this.salutInstance = salutInstance;
@@ -54,7 +54,9 @@ public class BackgroundRegistrationJob implements AsyncJob.OnBackgroundJob{
                         }
                     });
                 }
+
                 salutInstance.registeredClients.add(clientDevice);
+
             } else {
                 Log.d(Salut.TAG, "\nReceived request to unregister device.\n");
 
