@@ -33,8 +33,9 @@ This library depends on:
 
 ##Installation
 
-To install the library simply download the AAR from [here](https://github.com/markrjr/Salut/blob/master/build/outputs/aar/salut-0.1.aar), and add it as well as LoganSquare to your project's build.gradle file.
+To install the library simply download the AAR from [here](https://github.com/markrjr/Salut/blob/master/build/outputs/aar/) and it to your project.
 
+Below shows how to add LoganSquare to your project's build.gradle file.
 ```
     //This goes below the android section in build.gradle.
     buildscript {
