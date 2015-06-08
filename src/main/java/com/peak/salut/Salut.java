@@ -18,20 +18,15 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.arasthel.asyncjob.AsyncJob;
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Callbacks.SalutDeviceCallback;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -44,15 +39,15 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
     private static final int MAX_SERVER_CONNECTIONS = 25;
     private static final int BUFFER_SIZE = 65536;;
     protected static final String UNREGISTER_CODE= "UNREGISTER_SALUT_DEVICE";
-    private String TTP = "._tcp";
+    protected String TTP = "._tcp";
     protected SalutDataReceiver dataReceiver;
     protected boolean receiverRegistered = false;
 
     private static WifiManager wifiManager;
     private boolean respondersAlreadySet = false;
     private boolean firstDeviceAlreadyFound = false;
-    protected boolean registrationIsRunning = false;
     private SalutCallback deviceNotSupported;
+    protected boolean registrationIsRunning = false;
     protected SalutCallback onRegistered;
     protected SalutCallback onRegistrationFail;
     protected SalutDeviceCallback onDeviceRegisteredWithHost;
