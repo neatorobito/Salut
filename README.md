@@ -178,7 +178,7 @@ After clients have registered with the host, you can then invoke methods to send
     });
 ```
 
-Only the host, which has the addresses of all devices may invoke the above method. This will be changed in a future release to allow other client devices to send data to all registered devices as well. Below are the current methods for clients.
+Only the host, which has the addresses of all devices may invoke the above method. This may be changed in a future release to allow client devices to send data to all other client devices as well. As a current workaround, you could first send data to the host for approval and then inkvoke the above method. Below, however, are the current methods for clients.
 
 ```
     network.sendToDevice(deviceToSendTo, myData, new SalutCallback() {
