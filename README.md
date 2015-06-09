@@ -259,8 +259,8 @@ WiFi Direct is a really cool concept, but the APIs on Android make about as much
 ## TODO
 
 Handshake on device data transfer.  
-Improve reliability of data transfer.  
-Create threads to deal with data transfer instead of backlogging.  
+~~Improve reliability of data transfer.~~ Partially done in v0.3 to be finished when the above is implemented.    
+~~Create threads to deal with data transfer instead of backlogging.~~ Done in v0.3  
 Remember if WiFi was enabled beforehand.  
 Make data serialization modular. (Any library or method can be used.)
 
