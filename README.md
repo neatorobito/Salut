@@ -41,7 +41,7 @@ To install the library simply add it to to your project's build.gradle file.
    }
    
    dependencies {
-      compile 'com.github.markrjr:Salut:v0.4.0'
+      compile 'com.github.markrjr:Salut:v0.3.0'
       //Rest of dependencies.
    }
 
