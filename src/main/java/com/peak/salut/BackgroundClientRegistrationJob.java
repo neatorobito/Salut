@@ -10,11 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.ArrayList;
 
-/**
- * Created by markrjr on 6/8/15.
- */
 public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob{
 
 
