@@ -29,34 +29,23 @@ Salut is a French greeting. It's another way to say hello or goodbye. Apple's te
 This library depends on:  
 [LoganSquare (Serialization)](https://github.com/bluelinelabs/LoganSquare)  
 [AsyncJob Library](https://github.com/Arasthel/AsyncJobLibrary)  
-**You must include LoganSquare in your project in order to unserialize data.**
 
 ##Installation
 
-To install the library simply add it as well LoganSquare to your build.gradle file.
+To install the library simply add it to to your project's build.gradle file.
 ```
-    //Add to top for LoganSquare.
-    apply plugin: 'com.neenbedankt.android-apt'
+   repositories {
+       maven {
+           url "https://jitpack.io"
+       }
+   }
+   
+   dependencies {
+      compile 'com.github.markrjr:Salut:v0.3.2'
+      //Rest of dependencies.
+   }
 
-    //This goes below the android section in build.gradle.
-    buildscript {
-        repositories {
-            jcenter()
-            maven {
-                url "https://jitpack.io"
-            }
-        }
-        dependencies {
-            classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
-        }
-    }
-
-    dependencies {
-        apt 'com.bluelinelabs:logansquare-compiler:1.0.6'
-        compile 'com.bluelinelabs:logansquare:1.0.6'
-        compile 'com.github.markrjr:Salut:vX.X'
-        //Rest of dependencies.
-    }
+   
 ```
 
 ## Usage
