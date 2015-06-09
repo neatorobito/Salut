@@ -1,5 +1,5 @@
 # Salut
-Salut is a wrapper around the WiFi Direct service discovery API in Android. Before using Salut, you should at least skim over some of the documentation and recommended reading below. The library supports API 16 (Android 4.1 Jelly Bean) and up. Technically, WiFi direct is supported on Android 4.0, but it is more reliable on 4.1 and up.
+Salut is a wrapper around the WiFi Direct API in Android. Before using Salut, you should at least skim over some of the documentation and recommended reading below. The library supports API 16 (Android 4.1 Jelly Bean) and up. Technically, WiFi direct is supported on Android 4.0, but it is more reliable on 4.1 and up.
 
 ###Table of Contents  
 * [Dependencies](#dependencies)  
@@ -33,25 +33,28 @@ This library depends on:
 
 ##Installation
 
-To install the library simply download the AAR from [here](https://github.com/markrjr/Salut/blob/master/build/outputs/aar/) and it to your project.
-
-Below shows how to add LoganSquare to your project's build.gradle file.
+To install the library simply add it as well LoganSquare to your build.gradle file.
 ```
+    //Add to top for LoganSquare.
+    apply plugin: 'com.neenbedankt.android-apt'
+
     //This goes below the android section in build.gradle.
     buildscript {
         repositories {
             jcenter()
+            maven {
+                url "https://jitpack.io"
+            }
         }
         dependencies {
             classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
         }
     }
 
-    apply plugin: 'com.neenbedankt.android-apt'
-
     dependencies {
-        apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
-        compile 'com.bluelinelabs:logansquare:1.1.0'
+        apt 'com.bluelinelabs:logansquare-compiler:1.0.6'
+        compile 'com.bluelinelabs:logansquare:1.0.6'
+        compile 'com.github.markrjr:Salut:vX.X'
         //Rest of dependencies.
     }
 ```
@@ -259,8 +262,8 @@ WiFi Direct is a really cool concept, but the APIs on Android make about as much
 ## TODO
 
 Handshake on device data transfer.  
-~~Improve reliability of data transfer.~~ Partially done in v0.3 to be finished when the above is implemented.    
-~~Create threads to deal with data transfer instead of backlogging.~~ Done in v0.3  
+~~Improve reliability of data transfer.~~ *Partially done in v0.3 thanks to AsyncJob library.*      
+~~Create threads to deal with data transfer instead of backlogging.~~ *Done in v0.3*  
 Remember if WiFi was enabled beforehand.  
 Make data serialization modular. (Any library or method can be used.)
 
