@@ -32,21 +32,7 @@ This library depends on:
 
 ##Installation
 
-To install the library simply add it to to your project's build.gradle file.
-```
-   repositories {
-       maven {
-           url "https://jitpack.io"
-       }
-   }
-   
-   dependencies {
-      compile 'com.github.markrjr:Salut:v0.3.0'
-      //Rest of dependencies.
-   }
-
-   
-```
+To install the library simply grab the newest version it to to your project's build.gradle file using [JitPack](https://jitpack.io/#markrjr/Salut).
 
 ## Usage
 
