@@ -205,8 +205,13 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             });
         }
         else if(!thisDevice.isRegistered && !info.isGroupOwner) {
-            startRegistrationForClient(new InetSocketAddress(info.groupOwnerAddress.getHostAddress(), SALUT_SERVER_PORT));
+            if(info.groupOwnerAddress.getHostAddress().isEmpty())
+            {
+                disconnectFromDevice();
+                return;
+            }
 
+            startRegistrationForClient(new InetSocketAddress(info.groupOwnerAddress.getHostAddress(), SALUT_SERVER_PORT));
         }
     }
 
