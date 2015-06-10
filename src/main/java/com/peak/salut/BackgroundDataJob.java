@@ -10,6 +10,7 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob{
 
     private Salut salutInstance;
     private Socket clientSocket;
+    private String data;
 
     public BackgroundDataJob(Salut salutInstance, Socket clientSocket)
     {
@@ -26,8 +27,6 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob{
             Log.v(Salut.TAG, "A device is sending data...");
             DataInputStream dataStreamFromOtherDevice = new DataInputStream(clientSocket.getInputStream());
 
-            String data = "";
-
             while(dataStreamFromOtherDevice.available() > 0)
             {
                 data = dataStreamFromOtherDevice.readUTF();
@@ -39,7 +38,12 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob{
 
             if(!data.isEmpty())
             {
-                salutInstance.dataReceiver.dataCallback.onDataReceived(data);
+                salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        salutInstance.dataReceiver.dataCallback.onDataReceived(data);
+                    }
+                });
             }
         }
         catch(Exception ex)

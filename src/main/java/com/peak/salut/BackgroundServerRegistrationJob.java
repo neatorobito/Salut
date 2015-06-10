@@ -41,11 +41,12 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
 
                 Log.d(Salut.TAG, "Registered device and user: " + clientDevice);
                 clientDevice.isRegistered = true;
-                clientDevice.isSynced = true;
                 final SalutDevice finalDevice = clientDevice; //Allows us to get around having to add the final modifier earlier.
                 if (salutInstance.registeredClients.isEmpty()) {
                     salutInstance.startListeningForData();
                 }
+                salutInstance.registeredClients.add(clientDevice);
+
                 if (salutInstance.onDeviceRegisteredWithHost != null) {
                     salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
                         @Override
@@ -54,8 +55,6 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                         }
                     });
                 }
-
-                salutInstance.registeredClients.add(clientDevice);
 
             } else {
                 Log.d(Salut.TAG, "\nReceived request to unregister device.\n");

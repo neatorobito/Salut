@@ -58,7 +58,6 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 Log.d(Salut.TAG, "Registered Host | " + salutInstance.registeredHost.deviceName);
 
                 salutInstance.thisDevice.isRegistered = true;
-                salutInstance.thisDevice.isSynced = true;
                 salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -75,7 +74,6 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 String registrationCode = fromServer.readUTF(); //TODO Use to verify.
 
                 salutInstance.thisDevice.isRegistered = false;
-                salutInstance.thisDevice.isSynced = false;
                 salutInstance.registeredHost = null;
                 salutInstance.cleanUpDataConnection(false);
                 salutInstance.cleanUpDeviceConnection(false);

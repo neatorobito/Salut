@@ -23,8 +23,6 @@ public class SalutDevice {
     @JsonField
     public boolean isRegistered;
     @JsonField
-    public boolean isSynced;
-    @JsonField
     protected int servicePort;
     @JsonField
     protected String TTP = "._tcp.";

@@ -45,11 +45,6 @@ public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob{
             DataOutputStream dataStreamToOtherDevice = new DataOutputStream(dataSocket.getOutputStream());
             String dataToSend = LoganSquare.serialize(data);
             dataStreamToOtherDevice.writeUTF(dataToSend);
-            salutInstance.thisDevice.isRegistered = false;
-            salutInstance.thisDevice.isSynced = false;
-            salutInstance.registeredHost = null;
-
-
             dataStreamToOtherDevice.flush();
             Log.d(Salut.TAG, "Successfully sent data.");
 
