@@ -60,7 +60,7 @@ First, add the following permissions to your AndroidManifest.xml.
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-Next, start by implementing the `SalutDataCallback` in the class that you would like to receive data. 
+Next, start by implementing the `SalutDataCallback` in the class that you would like to receive data. **This callback as well as all others in the framework happen on the caller's thread.**
 
 Then, we need to create a `SalutDataReceiver` and a `SalutServiceData` object.
 ```
@@ -190,7 +190,7 @@ Only the host, which has the addresses of all devices may invoke the above metho
 ```
 
 ###Receiving data
-When your class implements the SalutDataCallback interface, it must override the `onDataReceived(Object data)` method. **If you want to update the UI in this method, be sure to use `runOnUiThread`.**
+When your class implements the SalutDataCallback interface, it must override the `onDataReceived(Object data)` method.
 
 **Data is sent between devices as serialized strings, and is recieved in this method as a `String`. To get it back to reality, you must parse it using LoganSquare.**
 
