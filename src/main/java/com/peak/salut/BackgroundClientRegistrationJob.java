@@ -87,7 +87,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
         }
         catch (IOException ex)
         {
-            Log.e(Salut.TAG, "An error occurred while attempting to register.");
+            Log.e(Salut.TAG, "An error occurred while attempting to register or unregister.");
             salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -95,7 +95,12 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                         salutInstance.onRegistrationFail.call();
                 }
             });
-            ex.printStackTrace();
+
+            if(salutInstance.thisDevice.isRegistered && salutInstance.isConnectedToAnotherDevice)
+            {
+                //Failed to unregister so an outright disconnect is necessary.
+                salutInstance.disconnectFromDevice();
+            }
         }
         finally {
             try
