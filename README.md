@@ -32,7 +32,7 @@ This library depends on:
 
 ##Installation
 
-To install the library simply grab the newest version it to to your project's build.gradle file using [JitPack](https://jitpack.io/#markrjr/Salut).
+To install the library simply grab the newest version and it to your project's build.gradle file using [JitPack](https://jitpack.io/#markrjr/Salut).
 
 ## Usage
 
