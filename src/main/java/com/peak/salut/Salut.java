@@ -46,6 +46,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
     private static WifiManager wifiManager;
     private boolean respondersAlreadySet = false;
     private boolean firstDeviceAlreadyFound = false;
+    private boolean connectingIsCanceled = false;
     private SalutCallback deviceNotSupported;
     protected boolean registrationIsRunning = false;
     protected SalutCallback onRegistered;
@@ -373,7 +374,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         connectToDevice(device, onRegistrationFail);
     }
 
-    public void sendToAllDevices(final Object data, final SalutCallback onFailure)
+    public void sendToAllDevices(final Object data, @Nullable final SalutCallback onFailure)
     {
         if(isRunningAsHost)
         {
@@ -387,7 +388,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         }
     }
 
-    public void sendToHost(final Object data, final SalutCallback onFailure)
+    public void sendToHost(final Object data, @Nullable final SalutCallback onFailure)
     {
         if(!isRunningAsHost && thisDevice.isRegistered)
         {
@@ -399,9 +400,25 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         }
     }
 
-    public void sendToDevice(final SalutDevice device, final Object data, final SalutCallback onFailure)
+    public void sendToDevice(final SalutDevice device, final Object data, @Nullable final SalutCallback onFailure)
     {
         sendData(device, data, onFailure);
+    }
+
+    public void cancelConnecting()
+    {
+        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.v(TAG, "Attempting to cancel connect.");
+                connectingIsCanceled = true;
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.e(TAG, "Failed to cancel connect.");
+            }
+        });
     }
 
 
@@ -680,11 +697,17 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (foundDevices.isEmpty()) {
-                    stopServiceDiscovery();
-                    cleanUpFunction.call();
-                } else {
-                    devicesFound.call();
+                if(connectingIsCanceled)
+                {
+                    connectingIsCanceled = false;
+                }
+                else {
+                    if (foundDevices.isEmpty()) {
+                        stopServiceDiscovery();
+                        cleanUpFunction.call();
+                    } else {
+                        devicesFound.call();
+                    }
                 }
             }
         }, timeout);
@@ -815,10 +838,14 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             receiverRegistered = false;
         }
 
+        if(connectingIsCanceled)
+        {
+            connectingIsCanceled = false;
+        }
+
         foundDevices.clear();
 
-        if (manager != null && channel != null)
-        {
+        if (manager != null && channel != null) {
             manager.removeServiceRequest(channel, serviceRequest, new WifiP2pManager.ActionListener() {
                 @Override
                 public void onSuccess() {

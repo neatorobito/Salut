@@ -46,6 +46,7 @@ public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob{
             String dataToSend = LoganSquare.serialize(data);
             dataStreamToOtherDevice.writeUTF(dataToSend);
             dataStreamToOtherDevice.flush();
+            dataStreamToOtherDevice.close();
             Log.d(Salut.TAG, "Successfully sent data.");
 
         } catch (Exception ex) {
