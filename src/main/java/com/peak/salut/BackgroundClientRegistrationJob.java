@@ -40,6 +40,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             //If this code is reached, we've connected to the server and will transfer data.
             Log.d(Salut.TAG, salutInstance.thisDevice.deviceName + " is connected to the server, transferring registration data...");
 
+            //TODO Use buffered streams.
             Log.v(Salut.TAG, "Sending client registration data to server...");
             String serializedClient = LoganSquare.serialize(salutInstance.thisDevice);
             DataOutputStream toClient = new DataOutputStream(registrationSocket.getOutputStream());

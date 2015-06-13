@@ -26,6 +26,7 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
             //If this code is reached, a client has connected and transferred data.
             Log.d(Salut.TAG, "A device has connected to the server, transferring data...");
 
+            //TODO Use buffered streams.
             Log.v(Salut.TAG, "Receiving client registration data...");
             DataInputStream fromClient = new DataInputStream(clientSocket.getInputStream());
             String serializedClient = fromClient.readUTF();

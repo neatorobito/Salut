@@ -2,6 +2,8 @@ package com.peak.salut;
 
 import android.util.Log;
 import com.arasthel.asyncjob.AsyncJob;
+
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.net.Socket;
 
@@ -25,7 +27,8 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob{
         {
             //If this code is reached, a client has connected and transferred data.
             Log.v(Salut.TAG, "A device is sending data...");
-            DataInputStream dataStreamFromOtherDevice = new DataInputStream(clientSocket.getInputStream());
+            BufferedInputStream bufferedRead = new BufferedInputStream(clientSocket.getInputStream());
+            DataInputStream dataStreamFromOtherDevice = new DataInputStream(bufferedRead);
             data = dataStreamFromOtherDevice.readUTF();
             dataStreamFromOtherDevice.close();
 

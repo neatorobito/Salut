@@ -6,6 +6,7 @@ import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.peak.salut.Callbacks.SalutCallback;
 
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -42,7 +43,8 @@ public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob{
 
             //If this code is reached, a client has connected and transferred data.
             Log.d(Salut.TAG, "Connected, transferring data...");
-            DataOutputStream dataStreamToOtherDevice = new DataOutputStream(dataSocket.getOutputStream());
+            BufferedOutputStream bufferedOut = new BufferedOutputStream(dataSocket.getOutputStream());
+            DataOutputStream dataStreamToOtherDevice = new DataOutputStream(bufferedOut);
             String dataToSend = LoganSquare.serialize(data);
             dataStreamToOtherDevice.writeUTF(dataToSend);
             dataStreamToOtherDevice.flush();
