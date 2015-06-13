@@ -26,12 +26,7 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob{
             //If this code is reached, a client has connected and transferred data.
             Log.v(Salut.TAG, "A device is sending data...");
             DataInputStream dataStreamFromOtherDevice = new DataInputStream(clientSocket.getInputStream());
-
-            while(dataStreamFromOtherDevice.available() > 0)
-            {
-                data = dataStreamFromOtherDevice.readUTF();
-            }
-
+            data = dataStreamFromOtherDevice.readUTF();
             dataStreamFromOtherDevice.close();
 
             Log.d(Salut.TAG, "\nSuccessfully received data.\n");
