@@ -5,6 +5,8 @@ import android.util.Log;
 import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -28,17 +30,22 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
 
             //TODO Use buffered streams.
             Log.v(Salut.TAG, "Receiving client registration data...");
-            DataInputStream fromClient = new DataInputStream(clientSocket.getInputStream());
+            BufferedInputStream bufferInput = new BufferedInputStream(clientSocket.getInputStream());
+            DataInputStream fromClient = new DataInputStream(bufferInput);
             String serializedClient = fromClient.readUTF();
+
             SalutDevice clientDevice = LoganSquare.parse(serializedClient, SalutDevice.class);
             clientDevice.serviceAddress = clientSocket.getInetAddress().toString().replace("/", "");
+
+            BufferedOutputStream bufferedOut = new BufferedOutputStream(clientSocket.getOutputStream());
+            DataOutputStream toClient = new DataOutputStream(bufferedOut);
 
             if (!clientDevice.isRegistered) {
 
                 Log.v(Salut.TAG, "Sending server registration data...");
                 String serializedServer = LoganSquare.serialize(salutInstance.thisDevice);
-                DataOutputStream toClient = new DataOutputStream(clientSocket.getOutputStream());
                 toClient.writeUTF(serializedServer);
+                toClient.flush();
 
                 Log.d(Salut.TAG, "Registered device and user: " + clientDevice);
                 clientDevice.isRegistered = true;
@@ -61,7 +68,6 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                 Log.d(Salut.TAG, "\nReceived request to unregister device.\n");
 
                 Log.v(Salut.TAG, "Sending registration code...");
-                DataOutputStream toClient = new DataOutputStream(clientSocket.getOutputStream());
                 toClient.writeUTF(Salut.UNREGISTER_CODE);
                 toClient.flush();
 
@@ -74,6 +80,10 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                     }
                 }
             }
+
+            fromClient.close();
+            toClient.close();
+
         } catch (Exception ex) {
             Log.e(Salut.TAG, "An error occurred while dealing with registration for a client.");
         }

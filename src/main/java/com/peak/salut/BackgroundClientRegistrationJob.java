@@ -5,6 +5,8 @@ import android.util.Log;
 import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -43,14 +45,17 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             //TODO Use buffered streams.
             Log.v(Salut.TAG, "Sending client registration data to server...");
             String serializedClient = LoganSquare.serialize(salutInstance.thisDevice);
-            DataOutputStream toClient = new DataOutputStream(registrationSocket.getOutputStream());
+            BufferedOutputStream bufferedOut = new BufferedOutputStream(registrationSocket.getOutputStream());
+            DataOutputStream toClient = new DataOutputStream(bufferedOut);
             toClient.writeUTF(serializedClient);
             toClient.flush();
 
+            Log.v(Salut.TAG, "Receiving server registration data...");
+            BufferedInputStream bufferedInput = new BufferedInputStream(registrationSocket.getInputStream());
+            DataInputStream fromServer = new DataInputStream(bufferedInput);
+
             if(!salutInstance.thisDevice.isRegistered)
             {
-                Log.v(Salut.TAG, "Receiving server registration data...");
-                DataInputStream fromServer = new DataInputStream(registrationSocket.getInputStream());
                 String serializedServer = fromServer.readUTF();
                 SalutDevice serverDevice = LoganSquare.parse(serializedServer, SalutDevice.class);
                 serverDevice.serviceAddress = registrationSocket.getInetAddress().toString().replace("/", "");
@@ -71,8 +76,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             }
             else {
 
-                DataInputStream fromServer = new DataInputStream(registrationSocket.getInputStream());
-                String registrationCode = fromServer.readUTF(); //TODO Use to verify.
+                String registrationCode = fromServer.readUTF(); //TODO Use to verify
 
                 salutInstance.thisDevice.isRegistered = false;
                 salutInstance.registeredHost = null;
@@ -83,6 +87,10 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 Log.d(Salut.TAG, "This device has successfully been unregistered from the server.");
 
             }
+
+            toClient.close();
+            fromServer.close();
+
         }
         catch (IOException ex)
         {
