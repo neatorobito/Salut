@@ -66,8 +66,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
 
-    public IntentFilter intentFilter = new IntentFilter();
-    public BroadcastReceiver receiver = null;
+    protected IntentFilter intentFilter = new IntentFilter();
+    protected BroadcastReceiver receiver = null;
 
     //Found Service Objects
     protected SalutDevice lastConnectedDevice;
@@ -452,12 +452,12 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                         @Override
                         public void onSuccess() {
                             isConnectedToAnotherDevice = false;
-                            Log.d(TAG, "Disconnected from device.");
+                            Log.d(TAG, "Removed WiFi Direct Grou.");
                         }
 
                         @Override
                         public void onFailure(int reason) {
-                            Log.e(TAG, "Failed to disconnect from device. Reason: " + reason);
+                            Log.e(TAG, "Failed to remove a WiFi Direct Group. Reason: " + reason);
                         }
                     });
                 }
