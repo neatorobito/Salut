@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.peak.salut.Callbacks.SalutCallback;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -19,6 +20,11 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
     private Salut salutInstance;
     private InetSocketAddress hostDeviceAddress;
     private final int BUFFER_SIZE = 65536;
+    protected static boolean disableWiFiOnUnregister;
+    protected static SalutCallback onRegistered;
+    protected static SalutCallback onRegistrationFail;
+    protected static SalutCallback onUnregisterSuccess;
+    protected static SalutCallback onUnregisterFailure;
 
 
     public BackgroundClientRegistrationJob(Salut salutInstance, InetSocketAddress hostDeviceAddress)
@@ -67,8 +73,8 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (salutInstance.onRegistered != null)
-                            salutInstance.onRegistered.call();
+                        if (onRegistered != null)
+                            onRegistered.call();
                     }
                 });
 
@@ -84,6 +90,16 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 salutInstance.cleanUpDeviceConnection(false);
                 salutInstance.disconnectFromDevice();
 
+                if(onUnregisterSuccess != null) //Success Callback.
+                {
+                    salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onUnregisterSuccess.call();
+                        }
+                    });
+                }
+
                 Log.d(Salut.TAG, "This device has successfully been unregistered from the server.");
 
             }
@@ -98,10 +114,14 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (salutInstance.onRegistrationFail != null)
-                        salutInstance.onRegistrationFail.call();
+                    if (onRegistrationFail != null && !salutInstance.thisDevice.isRegistered) //Prevents both callbacks from being called.
+                        onRegistrationFail.call();
+                    if(onUnregisterFailure != null)
+                        onUnregisterFailure.call();
+
                 }
             });
+
 
             if(salutInstance.thisDevice.isRegistered && salutInstance.isConnectedToAnotherDevice)
             {
@@ -110,6 +130,12 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             }
         }
         finally {
+
+            if(disableWiFiOnUnregister)
+            {
+                Salut.disableWiFi(salutInstance.dataReceiver.currentContext);
+            }
+
             try
             {
                 registrationSocket.close();
