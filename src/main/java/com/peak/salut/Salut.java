@@ -451,7 +451,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                         @Override
                         public void onSuccess() {
                             isConnectedToAnotherDevice = false;
-                            Log.d(TAG, "Removed WiFi Direct Grou.");
+                            Log.d(TAG, "Removed WiFi Direct Group.");
                         }
 
                         @Override
