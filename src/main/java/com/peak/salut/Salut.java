@@ -529,6 +529,11 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             {
                 onSuccess.call();
             }
+            thisDevice.isRegistered = false;
+            registeredHost = null;
+            cleanUpDataConnection(false);
+            cleanUpDeviceConnection(false);
+            disconnectFromDevice();
         }
         else
         {
@@ -721,8 +726,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                     connectingIsCanceled = false;
                 }
                 else {
-                    stopServiceDiscovery();
                     if (foundDevices.isEmpty()) {
+                        stopServiceDiscovery();
                         cleanUpFunction.call();
                     } else {
                         devicesFound.call();
