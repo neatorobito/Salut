@@ -51,7 +51,7 @@ Next, start by implementing the `SalutDataCallback` in the class that you would 
 Then, we need to create a `SalutDataReceiver` and a `SalutServiceData` object.
 ```
     SalutDataReceiver dataReceiver = new SalutDataReceiver(myActivity, myActivity);
-    SalutServiceData serviceData = new SalutServiceData("_superawesomeservice", 50489, superAwesomeUser.name);
+    SalutServiceData serviceData = new SalutServiceData("superawesomeservice", 50489, superAwesomeUser.name);
 ```
 `SalutDataReceiver` takes two arguments,`(Activity activity, SalutDataCallback dataCallback)`. In the example above, our activity implements `SalutDataCallback`, so we pass it in twice. Passing in an activity in general allows Salut to automatically register and unregister the neccessary broadcast receivers for you app.
 
