@@ -44,6 +44,8 @@ First, add the following permissions to your AndroidManifest.xml.
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--On Android you can't open sockets without the internet permission.-->
 ```
 
 Next, start by implementing the `SalutDataCallback` in the class that you would like to receive data. This callback as well as all others in the framework happen on the caller's thread.
