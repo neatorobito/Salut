@@ -90,7 +90,7 @@ Once you have your instance, you can create or discover WiFi direct services.
 When a device connects and is successfully registered, this callback will be fired. **You can access the entire list of registered clients using the field `registeredClients`.**
 
 ####CLIENT
-There are several methods to discover services. **Salut will connect to services of the same type.**
+There are several methods to discover services. **Salut will only connect to found services of the same type.**
 
 ```
     network.discoverNetworkServices(new SalutDeviceCallback() {
