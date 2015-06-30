@@ -65,8 +65,6 @@ Finally, create a `Salut` instance.
     Salut network = new Salut(dataReceiver, serviceData, new SalutCallback() {
         @Override
         public void call() {
-            wiFiFailureDiag.show();
-            //OR
             Log.e(TAG, "Sorry, but this device does not support WiFi Direct.");
         }
     });
