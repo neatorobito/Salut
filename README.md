@@ -246,7 +246,7 @@ Make data serialization modular. (Any library or method can be used.)
 (MIT)
 
 ```
-Copyright (c) 2015 Peak Digital LLP
+Copyright (c) 2015 Peak Digital LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
