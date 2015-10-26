@@ -70,7 +70,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 Log.d(Salut.TAG, "Registered Host | " + salutInstance.registeredHost.deviceName);
 
                 salutInstance.thisDevice.isRegistered = true;
-                salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
+                salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (onRegistered != null)
@@ -86,13 +86,12 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
 
                 salutInstance.thisDevice.isRegistered = false;
                 salutInstance.registeredHost = null;
-                salutInstance.cleanUpDataConnection(false);
-                salutInstance.cleanUpDeviceConnection(false);
+                salutInstance.closeDataSocket();
                 salutInstance.disconnectFromDevice();
 
                 if(onUnregisterSuccess != null) //Success Callback.
                 {
-                    salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
+                    salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             onUnregisterSuccess.call();
@@ -110,8 +109,10 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
         }
         catch (IOException ex)
         {
+            ex.printStackTrace();
+
             Log.e(Salut.TAG, "An error occurred while attempting to register or unregister.");
-            salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
+            salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (onRegistrationFail != null && !salutInstance.thisDevice.isRegistered) //Prevents both callbacks from being called.
@@ -133,9 +134,8 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
 
             if(disableWiFiOnUnregister)
             {
-                Salut.disableWiFi(salutInstance.dataReceiver.currentContext);
+                Salut.disableWiFi(salutInstance.dataReceiver.activity);
             }
-
             try
             {
                 registrationSocket.close();

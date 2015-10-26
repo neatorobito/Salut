@@ -55,7 +55,7 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                 salutInstance.registeredClients.add(clientDevice);
 
                 if (salutInstance.onDeviceRegisteredWithHost != null) {
-                    salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
+                    salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             salutInstance.onDeviceRegisteredWithHost.call(finalDevice);
@@ -84,6 +84,7 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
             toClient.close();
 
         } catch (Exception ex) {
+            ex.printStackTrace();
             Log.e(Salut.TAG, "An error occurred while dealing with registration for a client.");
         }
         finally {

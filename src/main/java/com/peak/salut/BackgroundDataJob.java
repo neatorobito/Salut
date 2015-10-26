@@ -36,7 +36,7 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob{
 
             if(!data.isEmpty())
             {
-                salutInstance.dataReceiver.currentContext.runOnUiThread(new Runnable() {
+                salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         salutInstance.dataReceiver.dataCallback.onDataReceived(data);
