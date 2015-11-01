@@ -56,6 +56,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
     public SalutDevice registeredHost;
     public boolean isRunningAsHost = false;
     public boolean isConnectedToAnotherDevice = false;
+    public boolean isDiscovering = false;
     private ServerSocket listenerServiceSocket;
     private ServerSocket salutServerSocket;
 
@@ -494,6 +495,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
     private void createService(final SalutCallback onSuccess, final SalutCallback onFailure) {
 
+        manager.clearLocalServices(channel, null);
+
         Log.d(TAG, "Starting " + thisDevice.serviceName + " Transport Protocol " + TTP);
 
         //Inject the listening port along with whatever else data that is going to be sent.
@@ -573,8 +576,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         unregisterClient(null, null, disableWiFi);
     }
 
-    public void startNetworkService(SalutDeviceCallback onDeviceRegisteredWithHost)
-    {
+    public void startNetworkService(SalutDeviceCallback onDeviceRegisteredWithHost) {
         startNetworkService(onDeviceRegisteredWithHost, null, null);
     }
 
@@ -620,11 +622,14 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
-                for(SalutDevice found : foundDevices)
+                if(!foundDevices.isEmpty())
                 {
-                    if(found.deviceName.equals(device.deviceName))
+                    for(SalutDevice found : foundDevices)
                     {
-                        return;
+                        if(found.deviceName.equals(device.deviceName))
+                        {
+                            return;
+                        }
                     }
                 }
 
@@ -664,11 +669,14 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
-                for(SalutDevice found : foundDevices)
+                if(!foundDevices.isEmpty())
                 {
-                    if(found.deviceName.equals(device.deviceName))
+                    for(SalutDevice found : foundDevices)
                     {
-                        return;
+                        if(found.deviceName.equals(device.deviceName))
+                        {
+                            return;
+                        }
                     }
                 }
 
@@ -682,7 +690,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                         onDeviceFound.call();
                         firstDeviceAlreadyFound = true;
                     }
-                    else if(firstDeviceAlreadyFound && callContinously)
+                    else if(callContinously)
                     {
                         onDeviceFound.call();
                     }
@@ -716,9 +724,15 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
-                for(SalutDevice found : foundDevices) {
-                    if (found.deviceName.equals(device.deviceName)) {
-                        return;
+
+                if(!foundDevices.isEmpty())
+                {
+                    for(SalutDevice found : foundDevices)
+                    {
+                        if(found.deviceName.equals(device.deviceName))
+                        {
+                            return;
+                        }
                     }
                 }
 
@@ -732,7 +746,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                         onDeviceFound.call(foundDevice);
                         firstDeviceAlreadyFound = true;
                     }
-                    else if(firstDeviceAlreadyFound && callContinously)
+                    else if(callContinously)
                     {
                         onDeviceFound.call(foundDevice);
                     }
@@ -768,6 +782,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
     private void discoverNetworkServices(final SalutCallback deviceNotSupported)
     {
+        isDiscovering = true;
+
         foundDevices.clear();
 
         if(!receiverRegistered)
@@ -883,6 +899,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
     public void stopServiceDiscovery(boolean shouldUnregister)
     {
+        isDiscovering = false;
+
         if(isConnectedToAnotherDevice)
             disconnectFromDevice();
 
