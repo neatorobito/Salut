@@ -683,16 +683,19 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                 if(record.containsValue(thisDevice.serviceName))
                 {
                     SalutDevice foundDevice = new SalutDevice(device, record);
-
                     foundDevices.add(foundDevice);
-                    if(!firstDeviceAlreadyFound && !callContinously)
+
+                    if(callContinously)
                     {
                         onDeviceFound.call();
-                        firstDeviceAlreadyFound = true;
                     }
-                    else if(callContinously)
+                    else
                     {
-                        onDeviceFound.call();
+                        if(!firstDeviceAlreadyFound)
+                        {
+                            onDeviceFound.call();
+                            firstDeviceAlreadyFound = true;
+                        }
                     }
                 }
             }
@@ -741,14 +744,17 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                     SalutDevice foundDevice = new SalutDevice(device, record);
 
                     foundDevices.add(foundDevice);
-                    if(!firstDeviceAlreadyFound && !callContinously)
+                    if(callContinously)
                     {
                         onDeviceFound.call(foundDevice);
-                        firstDeviceAlreadyFound = true;
                     }
-                    else if(callContinously)
+                    else
                     {
-                        onDeviceFound.call(foundDevice);
+                        if(!firstDeviceAlreadyFound)
+                        {
+                            onDeviceFound.call(foundDevice);
+                            firstDeviceAlreadyFound = true;
+                        }
                     }
                 }
             }
@@ -900,6 +906,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
     public void stopServiceDiscovery(boolean shouldUnregister)
     {
         isDiscovering = false;
+        firstDeviceAlreadyFound = false;
 
         if(isConnectedToAnotherDevice)
             disconnectFromDevice();
