@@ -36,6 +36,8 @@ To install the library simply grab the newest version and it to your project's b
 
 ## Usage
 
+### [Sample Activity](https://gist.github.com/markrjr/0519268f69a5823da17b)
+
 ###Getting started
 
 First, add the following permissions to your AndroidManifest.xml.
