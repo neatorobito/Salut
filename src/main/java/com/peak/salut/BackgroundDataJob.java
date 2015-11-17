@@ -4,6 +4,7 @@ import android.util.Log;
 import com.arasthel.asyncjob.AsyncJob;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.net.Socket;
 
@@ -27,8 +28,8 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob{
         {
             //If this code is reached, a client has connected and transferred data.
             Log.v(Salut.TAG, "A device is sending data...");
-            BufferedInputStream bufferedRead = new BufferedInputStream(clientSocket.getInputStream());
-            DataInputStream dataStreamFromOtherDevice = new DataInputStream(bufferedRead);
+
+            DataInputStream dataStreamFromOtherDevice = new DataInputStream(clientSocket.getInputStream());
             data = dataStreamFromOtherDevice.readUTF();
             dataStreamFromOtherDevice.close();
 

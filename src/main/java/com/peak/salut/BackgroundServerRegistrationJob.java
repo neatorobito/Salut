@@ -29,15 +29,16 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
             Log.d(Salut.TAG, "A device has connected to the server, transferring data...");
 
             Log.v(Salut.TAG, "Receiving client registration data...");
-            BufferedInputStream bufferInput = new BufferedInputStream(clientSocket.getInputStream());
-            DataInputStream fromClient = new DataInputStream(bufferInput);
+            DataInputStream fromClient = new DataInputStream(clientSocket.getInputStream());
             String serializedClient = fromClient.readUTF();
+
+            System.out.println(serializedClient);
+
 
             SalutDevice clientDevice = LoganSquare.parse(serializedClient, SalutDevice.class);
             clientDevice.serviceAddress = clientSocket.getInetAddress().toString().replace("/", "");
 
-            BufferedOutputStream bufferedOut = new BufferedOutputStream(clientSocket.getOutputStream());
-            DataOutputStream toClient = new DataOutputStream(bufferedOut);
+            DataOutputStream toClient = new DataOutputStream(clientSocket.getOutputStream());
 
             if (!clientDevice.isRegistered) {
 

@@ -46,7 +46,6 @@ public class SalutBroadcastReciever extends BroadcastReceiver {
             NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 
             if (networkInfo.isConnected() && networkInfo.getTypeName().equals("WIFI_P2P")) {
-
                 salutInstance.isConnectedToAnotherDevice = true;
                 manager.requestConnectionInfo(channel, salutInstance);
 

@@ -43,8 +43,7 @@ public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob{
 
             //If this code is reached, a client has connected and transferred data.
             Log.d(Salut.TAG, "Connected, transferring data...");
-            BufferedOutputStream bufferedOut = new BufferedOutputStream(dataSocket.getOutputStream());
-            DataOutputStream dataStreamToOtherDevice = new DataOutputStream(bufferedOut);
+            DataOutputStream dataStreamToOtherDevice = new DataOutputStream(dataSocket.getOutputStream());
             String dataToSend = LoganSquare.serialize(data);
             dataStreamToOtherDevice.writeUTF(dataToSend);
             dataStreamToOtherDevice.flush();

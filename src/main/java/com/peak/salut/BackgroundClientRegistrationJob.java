@@ -51,19 +51,18 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             //TODO Use buffered streams.
             Log.v(Salut.TAG, "Sending client registration data to server...");
             String serializedClient = LoganSquare.serialize(salutInstance.thisDevice);
-            BufferedOutputStream bufferedOut = new BufferedOutputStream(registrationSocket.getOutputStream());
-            DataOutputStream toClient = new DataOutputStream(bufferedOut);
+            DataOutputStream toClient = new DataOutputStream(registrationSocket.getOutputStream());
             toClient.writeUTF(serializedClient);
             toClient.flush();
 
-            Log.v(Salut.TAG, "Receiving server registration data...");
-            BufferedInputStream bufferedInput = new BufferedInputStream(registrationSocket.getInputStream());
-            DataInputStream fromServer = new DataInputStream(bufferedInput);
+            DataInputStream fromServer = new DataInputStream(registrationSocket.getInputStream());
 
             if(!salutInstance.thisDevice.isRegistered)
             {
+                Log.v(Salut.TAG, "Receiving server registration data...");
                 String serializedServer = fromServer.readUTF();
                 SalutDevice serverDevice = LoganSquare.parse(serializedServer, SalutDevice.class);
+
                 serverDevice.serviceAddress = registrationSocket.getInetAddress().toString().replace("/", "");
                 salutInstance.registeredHost = serverDevice;
 
