@@ -35,9 +35,9 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
     protected static final String TAG = "Salut";
     private static final int SALUT_SERVER_PORT = 37500;
-    private static final int MAX_CLIENT_CONNECTIONS = 5;
     private static final int MAX_SERVER_CONNECTIONS = 25;
     private static final int BUFFER_SIZE = 65536;;
+    protected static final String STRING_ENCODING = "UTF-8";
     protected static final String UNREGISTER_CODE= "UNREGISTER_SALUT_DEVICE";
     protected String TTP = "._tcp";
     protected SalutDataReceiver dataReceiver;
@@ -88,7 +88,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         thisDevice = new SalutDevice();
         thisDevice.serviceName = salutServiceData.serviceData.get("SERVICE_NAME");
         thisDevice.readableName = salutServiceData.serviceData.get("INSTANCE_NAME");
-        thisDevice.instanceName = salutServiceData.serviceData.get("INSTANCE_NAME") + "-" + wifiInfo.getMacAddress().hashCode();
+        thisDevice.instanceName = "" + wifiInfo.getMacAddress().hashCode();
         thisDevice.macAddress = wifiInfo.getMacAddress();
         thisDevice.TTP = thisDevice.serviceName + TTP;
         thisDevice.servicePort = Integer.valueOf(salutServiceData.serviceData.get("SERVICE_PORT"));
@@ -439,12 +439,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             Method deletePersistentGroup = WifiP2pManager.class.getMethod("deletePersistentGroup",
                     WifiP2pManager.Channel.class, Integer.class, WifiP2pManager.ActionListener.class);
             deletePersistentGroup.invoke(manager, channel, networkId, null);
-        } catch (NoSuchMethodException e) {
-            Log.v(Salut.TAG, "Failed to delete persistent group.", e);
-        } catch (InvocationTargetException e) {
-            Log.v(Salut.TAG, "Failed to delete persistent group.", e);
-        } catch (IllegalAccessException e) {
-            Log.v(Salut.TAG, "Failed to delete persistent group.", e);
+        } catch (Exception ex) {
+            Log.v(Salut.TAG, "Failed to delete persistent group.");
         }
     }
 

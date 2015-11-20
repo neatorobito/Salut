@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.google.common.base.Charsets;
 import com.peak.salut.Callbacks.SalutCallback;
 
 import java.io.BufferedOutputStream;
@@ -43,11 +44,14 @@ public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob{
 
             //If this code is reached, a client has connected and transferred data.
             Log.d(Salut.TAG, "Connected, transferring data...");
-            DataOutputStream dataStreamToOtherDevice = new DataOutputStream(dataSocket.getOutputStream());
+            BufferedOutputStream dataStreamToOtherDevice = new BufferedOutputStream(dataSocket.getOutputStream());
+
             String dataToSend = LoganSquare.serialize(data);
-            dataStreamToOtherDevice.writeUTF(dataToSend);
+
+            dataStreamToOtherDevice.write(dataToSend.getBytes(Charsets.UTF_8));
             dataStreamToOtherDevice.flush();
             dataStreamToOtherDevice.close();
+
             Log.d(Salut.TAG, "Successfully sent data.");
 
         } catch (Exception ex) {
