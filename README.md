@@ -61,7 +61,7 @@ Then, we need to create a `SalutDataReceiver` and a `SalutServiceData` object.
 ```
 `SalutDataReceiver` takes two arguments,`(Activity activity, SalutDataCallback dataCallback)`. In the example above, our activity implements `SalutDataCallback`, so we pass it in twice. Passing in an activity in general allows Salut to automatically register and unregister the neccessary broadcast receivers for you app.
 
-`SalutServiceData` takes in a service name (which should be lowercase), a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic. **Use relatively small strings for both the service name and readable names if you plan to support lower than Android 5.0, as there is a limitation on the size that those values can be. This is imposed by the system itself.**
+`SalutServiceData` takes in a service name, a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic. **Use relatively small strings for both the service name and readable names if you plan to support lower than Android 5.0, as there is a limitation on the size that those values can be. This is imposed by the system itself.**
 
 Finally, create a `Salut` instance.
 
@@ -182,7 +182,7 @@ Only the host, which has the addresses of all devices may invoke the above metho
 ###Receiving data
 When your class implements the SalutDataCallback interface, it must override the `onDataReceived(Object data)` method.
 
-**Data is sent between devices as serialized strings, and is recieved in this method as a `String`. To get it back to reality, you must parse it using LoganSquare.**
+**Data is sent between devices as serialized strings, and is received in this method as a `String`. To get it back to reality, you must parse it using LoganSquare.**
 
 Data is received as a string so that you can parse it yourself instead of Salut doing it for you.
 
