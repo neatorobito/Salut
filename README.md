@@ -50,6 +50,8 @@ First, add the following permissions to your AndroidManifest.xml.
     <!--On Android you can't open sockets without the internet permission.-->
 ```
 
+*On Andorid 6.0 and up, these permissions are given to the app automatically. [(Read more here)](http://developer.android.com/guide/topics/security/normal-permissions.html)*
+
 Next, start by implementing the `SalutDataCallback` in the class that you would like to receive data. This callback as well as all others in the framework happen on the caller's thread.
 
 Then, we need to create a `SalutDataReceiver` and a `SalutServiceData` object.
