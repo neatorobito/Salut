@@ -232,7 +232,7 @@ boolean indicating whether or not you want to disable WiFi.
 
 ## Contributing
 
-Feel free to submit issue requests or forks.
+Feel free to submit issues, requests, or fork the project.
 
 ## Motivation
 
