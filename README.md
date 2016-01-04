@@ -218,7 +218,7 @@ To send data to a specific device:
         }
     });
     
-    network.sendToHost(myData, new SalutCallback() {
+    network.sendToHost(myMessage, new SalutCallback() {
         @Override
         public void call() {
             Log.e(TAG, "Oh no! The data failed to send.");
@@ -247,7 +247,7 @@ Regardless of the whatever method you choose to define serialized data, parsing 
         try
         {
             Message newMessage = LoganSquare.parse((Message)data, Message.class);
-            Log.d(TAG, Message.description);
+            Log.d(TAG, newMessage.description);  //See you on the other side!
             //Do other stuff with data.
         }
         catch (IOException ex)
