@@ -30,6 +30,24 @@ This library depends on:
 [LoganSquare (Serialization)](https://github.com/bluelinelabs/LoganSquare)  
 [AsyncJob Library](https://github.com/Arasthel/AsyncJobLibrary)  
 
+**You must include LoganSquare.** To do so, add the following to your project's build.grade.
+```
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+apply plugin: 'com.neenbedankt.android-apt'
+
+dependencies {
+    apt 'com.bluelinelabs:logansquare-compiler:1.3.4'
+    compile 'com.bluelinelabs:logansquare:1.3.4'
+}
+```
+
 ##Installation
 
 To install the library simply grab the newest version and it to your project's build.gradle file using [JitPack](https://jitpack.io/#markrjr/Salut).
@@ -147,12 +165,37 @@ Finally, when a device finds a prospective host, you must then call the `registe
 ```
 This method will actually make the devices connect using WiFi Direct. The framework then uses regular old sockets to pass data between devices. The devices will stay connected until `unregisterClient` is called client side or `stopNetworkService` is called host side.
 
-###Sending data
+###Crafting your data
+LoganSquare, which is the library that is responsible for serializing data within the library will not actually allow the sending of straight strings back and forth. So, you'll have to create a class to wrap the data that you want to send.
+```
+@JsonObject
+public class Message{
 
+    /*
+     * Annotate a field that you want sent with the @JsonField marker.
+     */
+    @JsonField
+    public String description;
+
+    /*
+     * Note that since this field isn't annotated as a
+     * @JsonField, LoganSquare will ignore it when parsing
+     * and serializing this class.
+     */
+    public int nonJsonField;
+}
+```
+
+###Sending data
 After clients have registered with the host, you can then invoke methods to send data to a client. On success, the data will obviously be sent and received on the other side, as of yet, onSuccess callbacks have not yet been implemented for this. So, sending data methods only provide failure callbacks.
 
+To send data to all devices:
+
 ```
-    network.sendToAllDevices(myData, new SalutCallback() {
+    Message myMessage = new Message();
+    myMessage.description = "See you on the other side!";
+    
+    network.sendToAllDevices(myMessage, new SalutCallback() {
         @Override
         public void call() {
             Log.e(TAG, "Oh no! The data failed to send.");
@@ -162,8 +205,13 @@ After clients have registered with the host, you can then invoke methods to send
 
 Only the host, which has the addresses of all devices may invoke the above method. This may be changed in a future release to allow client devices to send data to all other client devices as well. As a current workaround, you could first send data to the host for approval and then inkvoke the above method. Below, however, are the current methods for clients.
 
+To send data to a specific device:
+
 ```
-    network.sendToDevice(deviceToSendTo, myData, new SalutCallback() {
+    Message myMessage = new Message();
+    myMessage.description = "See you on the other side!";
+
+    network.sendToDevice(deviceToSendTo, myMessage, new SalutCallback() {
         @Override
         public void call() {
             Log.e(TAG, "Oh no! The data failed to send.");
@@ -198,8 +246,8 @@ Regardless of the whatever method you choose to define serialized data, parsing 
         Log.d(TAG, "Received network data.");
         try
         {
-            MyData mydata = LoganSquare.parse((String)data, MyData.class);
-            Log.d(TAG, myData.superGreatField.toString());
+            Message newMessage = LoganSquare.parse((Message)data, Message.class);
+            Log.d(TAG, Message.description);
             //Do other stuff with data.
         }
         catch (IOException ex)
