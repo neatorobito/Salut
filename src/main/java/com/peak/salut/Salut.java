@@ -1,5 +1,6 @@
 package com.peak.salut;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -13,6 +14,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.net.wifi.p2p.nsd.WifiP2pServiceInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -22,7 +24,6 @@ import com.peak.salut.Callbacks.SalutCallback;
 import com.peak.salut.Callbacks.SalutDeviceCallback;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -31,14 +32,14 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-public class Salut implements WifiP2pManager.ConnectionInfoListener{
+public class Salut implements WifiP2pManager.ConnectionInfoListener {
 
     protected static final String TAG = "Salut";
     private static final int SALUT_SERVER_PORT = 37500;
     private static final int MAX_SERVER_CONNECTIONS = 25;
-    private static final int BUFFER_SIZE = 65536;;
+    private static final int BUFFER_SIZE = 65536;
     protected static final String STRING_ENCODING = "UTF-8";
-    protected static final String UNREGISTER_CODE= "UNREGISTER_SALUT_DEVICE";
+    protected static final String UNREGISTER_CODE = "UNREGISTER_SALUT_DEVICE";
     protected String TTP = "._tcp";
     protected SalutDataReceiver dataReceiver;
     protected boolean receiverRegistered = false;
@@ -75,9 +76,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
     public ArrayList<SalutDevice> registeredClients;
 
 
-
-    public Salut(SalutDataReceiver dataReceiver, SalutServiceData salutServiceData, SalutCallback deviceNotSupported)
-    {
+    public Salut(SalutDataReceiver dataReceiver, SalutServiceData salutServiceData, SalutCallback deviceNotSupported) {
         WifiManager wifiMan = (WifiManager) dataReceiver.context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiMan.getConnectionInfo();
 
@@ -106,16 +105,15 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onChannelDisconnected() {
                 Log.d(TAG, "Attempting to reinitialize channel.");
-                channel = manager.initialize(Salut.this.dataReceiver.context,Salut.this.dataReceiver.context.getMainLooper(), this);
+                channel = manager.initialize(Salut.this.dataReceiver.context, Salut.this.dataReceiver.context.getMainLooper(), this);
             }
         });
 
-        receiver = new SalutBroadcastReciever(this, manager, channel);
+        receiver = new SalutBroadcastReceiver(this, manager, channel);
     }
 
-    private void obtainSalutPortLock()
-    {
-        if(salutServerSocket == null || salutServerSocket.isClosed()) {
+    private void obtainSalutPortLock() {
+        if (salutServerSocket == null || salutServerSocket.isClosed()) {
             try {
                 salutServerSocket = new ServerSocket(SALUT_SERVER_PORT, MAX_SERVER_CONNECTIONS);
                 salutServerSocket.setReuseAddress(true);
@@ -137,9 +135,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         }
     }
 
-    private void obtainServicePortLock()
-    {
-        if(listenerServiceSocket == null || listenerServiceSocket.isClosed()) {
+    private void obtainServicePortLock() {
+        if (listenerServiceSocket == null || listenerServiceSocket.isClosed()) {
             try {
                 listenerServiceSocket = new ServerSocket(thisDevice.servicePort, MAX_SERVER_CONNECTIONS);
                 listenerServiceSocket.setReuseAddress(true);
@@ -161,22 +158,18 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         }
     }
 
-    public ArrayList<String> getReadableFoundNames()
-    {
+    public ArrayList<String> getReadableFoundNames() {
         ArrayList<String> foundHostNames = new ArrayList<>(foundDevices.size());
-        for(SalutDevice device : foundDevices)
-        {
+        for (SalutDevice device : foundDevices) {
             foundHostNames.add(device.readableName);
         }
 
         return foundHostNames;
     }
 
-    public ArrayList<String> getReadableRegisteredNames()
-    {
+    public ArrayList<String> getReadableRegisteredNames() {
         ArrayList<String> registeredNames = new ArrayList<>(registeredClients.size());
-        for(SalutDevice device : registeredClients)
-        {
+        for (SalutDevice device : registeredClients) {
             registeredNames.add(device.readableName);
         }
 
@@ -211,16 +204,13 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         });
     }
 
-    public static void enableWiFi(Context context)
-    {
+    public static void enableWiFi(Context context) {
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
     }
 
-    public static boolean isWiFiEnabled(Context context)
-    {
-        if(hotspotIsEnabled(context))
-        {
+    public static boolean isWiFiEnabled(Context context) {
+        if (hotspotIsEnabled(context)) {
             return false;
         }
 
@@ -228,24 +218,19 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         return wifiManager.isWifiEnabled();
     }
 
-    public static void disableWiFi(Context context)
-    {
+    public static void disableWiFi(Context context) {
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
     }
 
-    public static boolean hotspotIsEnabled(Context context)
-    {
-        try
-        {
+    public static boolean hotspotIsEnabled(Context context) {
+        try {
             wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             Method method = wifiManager.getClass().getDeclaredMethod("isWifiApEnabled");
             method.setAccessible(true);
 
             return (Boolean) method.invoke(wifiManager, (Object[]) null);
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             Log.d(TAG, "Failed to check tethering state, or it is not enabled.");
         }
@@ -253,51 +238,41 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         return false;
     }
 
-    protected void closeRegistrationSocket()
-    {
+    protected void closeRegistrationSocket() {
         try {
-            if(registrationIsRunning)
-            {
+            if (registrationIsRunning) {
                 salutServerSocket.close();
                 Log.v(TAG, "Registration sockets now closed.");
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Log.e(TAG, "Failed to close registration socket.");
         }
 
         registrationIsRunning = false;
     }
 
-    protected void closeDataSocket()
-    {
+    protected void closeDataSocket() {
         try {
             listenerServiceSocket.close();
             Log.v(TAG, "Stopped listening for service data.");
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             Log.e(TAG, "Failed to close listening socket.");
         }
     }
 
-    private void startRegistrationForClient(final InetSocketAddress hostDeviceAddress)
-    {
+    private void startRegistrationForClient(final InetSocketAddress hostDeviceAddress) {
 
         BackgroundClientRegistrationJob registrationJob = new BackgroundClientRegistrationJob(this, hostDeviceAddress);
         AsyncJob.doInBackground(registrationJob);
 
     }
 
-    private void sendData(final SalutDevice device, final Object data, @Nullable final SalutCallback onFailure)
-    {
+    private void sendData(final SalutDevice device, final Object data, @Nullable final SalutCallback onFailure) {
         BackgroundDataSendJob sendDataToDevice = new BackgroundDataSendJob(device, this, data, onFailure);
         AsyncJob.doInBackground(sendDataToDevice);
     }
 
-    private void startHostRegistrationServer()
-    {
+    private void startHostRegistrationServer() {
         obtainSalutPortLock();
 
         AsyncJob.doInBackground(new AsyncJob.OnBackgroundJob() {
@@ -324,8 +299,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         });
     }
 
-    protected void startListeningForData()
-    {
+    protected void startListeningForData() {
         obtainServicePortLock();
 
         AsyncJob.doInBackground(new AsyncJob.OnBackgroundJob() {
@@ -346,54 +320,43 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                     }
 
                 } catch (Exception ex) {
-                        Log.e(TAG, "An error has occurred within the data listening server thread.");
-                        ex.printStackTrace();
+                    Log.e(TAG, "An error has occurred within the data listening server thread.");
+                    ex.printStackTrace();
                 }
             }
         });
     }
 
-    public void registerWithHost(final SalutDevice device, @Nullable SalutCallback onRegistered, @Nullable final SalutCallback onRegistrationFail)
-    {
+    public void registerWithHost(final SalutDevice device, @Nullable SalutCallback onRegistered, @Nullable final SalutCallback onRegistrationFail) {
         BackgroundClientRegistrationJob.onRegistered = onRegistered;
         BackgroundClientRegistrationJob.onRegistrationFail = onRegistrationFail;
         this.unexpectedDisconnect = onRegistrationFail;
         connectToDevice(device, onRegistrationFail);
     }
 
-    public void sendToAllDevices(final Object data, @Nullable final SalutCallback onFailure)
-    {
-        if(isRunningAsHost)
-        {
-            for(SalutDevice registered : registeredClients) {
+    public void sendToAllDevices(final Object data, @Nullable final SalutCallback onFailure) {
+        if (isRunningAsHost) {
+            for (SalutDevice registered : registeredClients) {
                 sendData(registered, data, onFailure);
             }
-        }
-        else
-        {
+        } else {
             Log.e(TAG, "You must be running as the host to invoke this method.");
         }
     }
 
-    public void sendToHost(final Object data, @Nullable final SalutCallback onFailure)
-    {
-        if(!isRunningAsHost && thisDevice.isRegistered)
-        {
+    public void sendToHost(final Object data, @Nullable final SalutCallback onFailure) {
+        if (!isRunningAsHost && thisDevice.isRegistered) {
             sendData(registeredHost, data, onFailure);
-        }
-        else
-        {
+        } else {
             Log.e(TAG, "You must be running as a client to invoke this method.");
         }
     }
 
-    public void sendToDevice(final SalutDevice device, final Object data, @Nullable final SalutCallback onFailure)
-    {
+    public void sendToDevice(final SalutDevice device, final Object data, @Nullable final SalutCallback onFailure) {
         sendData(device, data, onFailure);
     }
 
-    public void cancelConnecting()
-    {
+    public void cancelConnecting() {
         manager.cancelConnect(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -410,8 +373,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         connectingIsCanceled = true;
     }
 
-    private void connectToDevice(final SalutDevice device, final SalutCallback onFailure)
-    {
+    private void connectToDevice(final SalutDevice device, final SalutCallback onFailure) {
 
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = device.macAddress;
@@ -431,8 +393,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         });
     }
 
-    private void deleteGroup(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pGroup wifiP2pGroup)
-    {
+    private void deleteGroup(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiP2pGroup wifiP2pGroup) {
         try {
             Method getNetworkId = WifiP2pGroup.class.getMethod("getNetworkId");
             Integer networkId = (Integer) getNetworkId.invoke(wifiP2pGroup);
@@ -444,29 +405,29 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         }
     }
 
-    protected void forceDisconnect()
-    {
-        WifiP2pManager.ActionListener doNothing = new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
+    protected void forceDisconnect() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            WifiP2pManager.ActionListener doNothing = new WifiP2pManager.ActionListener() {
+                @Override
+                public void onSuccess() {
 
-            }
+                }
 
-            @Override
-            public void onFailure(int reason) {
+                @Override
+                public void onFailure(int reason) {
 
-            }
-        };
+                }
+            };
 
-        stopServiceDiscovery(false);
-        manager.cancelConnect(channel, doNothing);
-        manager.clearLocalServices(channel, doNothing);
-        manager.clearServiceRequests(channel, doNothing);
-        manager.stopPeerDiscovery(channel, doNothing);
+            stopServiceDiscovery(false);
+            manager.cancelConnect(channel, doNothing);
+            manager.clearLocalServices(channel, doNothing);
+            manager.clearServiceRequests(channel, doNothing);
+            manager.stopPeerDiscovery(channel, doNothing);
+        }
     }
 
-    protected void disconnectFromDevice()
-    {
+    protected void disconnectFromDevice() {
         manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(final WifiP2pGroup group) {
@@ -489,6 +450,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         });
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void createService(final SalutCallback onSuccess, final SalutCallback onFailure) {
 
         manager.clearLocalServices(channel, null);
@@ -499,7 +461,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         thisDevice.txtRecord.put("LISTEN_PORT", String.valueOf(thisDevice.servicePort));
 
         //Create a service info object will android will actually hand out to the clients.
-        serviceInfo = WifiP2pDnsSdServiceInfo.newInstance(thisDevice.instanceName, TTP , thisDevice.txtRecord);
+        serviceInfo = WifiP2pDnsSdServiceInfo.newInstance(thisDevice.instanceName, TTP, thisDevice.txtRecord);
 
         //Register our service. The callbacks here just let us know if the service was registered correctly,
         //not necessarily whether or not we connected to a device.
@@ -536,39 +498,32 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         });
     }
 
-    public void unregisterClient(@Nullable SalutCallback onSuccess, @Nullable SalutCallback onFailure, boolean disableWiFi)
-    {
+    public void unregisterClient(@Nullable SalutCallback onSuccess, @Nullable SalutCallback onFailure, boolean disableWiFi) {
 
         BackgroundClientRegistrationJob.onUnregisterSuccess = onSuccess;
         BackgroundClientRegistrationJob.onUnregisterFailure = onFailure;
         BackgroundClientRegistrationJob.disableWiFiOnUnregister = disableWiFi;
 
-        if(receiverRegistered)
-        {
+        if (receiverRegistered) {
             dataReceiver.context.unregisterReceiver(receiver);
             receiverRegistered = false;
         }
 
-        if(!isConnectedToAnotherDevice)
-        {
+        if (!isConnectedToAnotherDevice) {
             Log.d(TAG, "Attempted to unregister, but not connected to group. The remote service may already have shutdown.");
             thisDevice.isRegistered = false;
             registeredHost = null;
             closeDataSocket();
             disconnectFromDevice();
-            if(onSuccess != null)
-            {
+            if (onSuccess != null) {
                 onSuccess.call();
             }
-        }
-        else
-        {
+        } else {
             startRegistrationForClient(new InetSocketAddress(registeredHost.serviceAddress, SALUT_SERVER_PORT));
         }
     }
 
-    public void unregisterClient(boolean disableWiFi)
-    {
+    public void unregisterClient(boolean disableWiFi) {
         unregisterClient(null, null, disableWiFi);
     }
 
@@ -576,8 +531,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         startNetworkService(onDeviceRegisteredWithHost, null, null);
     }
 
-    public void startNetworkService(@Nullable SalutDeviceCallback onDeviceRegisteredWithHost, @Nullable SalutCallback onSuccess,  @Nullable SalutCallback onFailure)
-    {
+    public void startNetworkService(@Nullable SalutDeviceCallback onDeviceRegisteredWithHost, @Nullable SalutCallback onSuccess, @Nullable SalutCallback onFailure) {
         //In order to have a service that you create be seen, you must also actively look for other services. This is an Android bug.
         //For more information, read here. https://code.google.com/p/android/issues/detail?id=37425
         //We do not need to setup DNS responders.
@@ -585,8 +539,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
         this.onDeviceRegisteredWithHost = onDeviceRegisteredWithHost;
 
-        if(!receiverRegistered)
-        {
+        if (!receiverRegistered) {
             dataReceiver.context.registerReceiver(receiver, intentFilter);
             receiverRegistered = true;
         }
@@ -595,8 +548,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         discoverNetworkServices(deviceNotSupported);
     }
 
-    private void setupDNSResponders()
-    {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void setupDNSResponders() {
          /*Here, we register a listener for when services are actually found. The WiFi P2P specification notes that we need two types of
          *listeners, one for a DNS service and one for a TXT record. The DNS service listener is invoked whenever a service is found, regardless
          *of whether or not it is yours. To that determine if it is, we must compare our service name with the service name. If it is our service,
@@ -606,7 +559,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdServiceAvailable(String instanceName, String serviceNameAndTP, WifiP2pDevice sourceDevice) {
 
-                Log.d(TAG, "Found " + instanceName +  " " + serviceNameAndTP);
+                Log.d(TAG, "Found " + instanceName + " " + serviceNameAndTP);
 
             }
         };
@@ -618,19 +571,15 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
-                if(!foundDevices.isEmpty())
-                {
-                    for(SalutDevice found : foundDevices)
-                    {
-                        if(found.deviceName.equals(device.deviceName))
-                        {
+                if (!foundDevices.isEmpty()) {
+                    for (SalutDevice found : foundDevices) {
+                        if (found.deviceName.equals(device.deviceName)) {
                             return;
                         }
                     }
                 }
 
-                if(record.containsValue(thisDevice.serviceName))
-                {
+                if (record.containsValue(thisDevice.serviceName)) {
                     SalutDevice foundDevice = new SalutDevice(device, record);
                     foundDevices.add(foundDevice);
                 }
@@ -641,9 +590,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         respondersAlreadySet = true;
     }
 
-
-    private void setupDNSResponders(final SalutCallback onDeviceFound, final boolean callContinously)
-    {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void setupDNSResponders(final SalutCallback onDeviceFound, final boolean callContinously) {
          /*Here, we register a listener for when services are actually found. The WiFi P2P specification notes that we need two types of
          *listeners, one for a DNS service and one for a TXT record. The DNS service listener is invoked whenever a service is found, regardless
          *of whether or not it is yours. To that determine if it is, we must compare our service name with the service name. If it is our service,
@@ -653,7 +601,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdServiceAvailable(String instanceName, String serviceNameAndTP, WifiP2pDevice sourceDevice) {
 
-                Log.d(TAG, "Found " + instanceName +  " " + serviceNameAndTP);
+                Log.d(TAG, "Found " + instanceName + " " + serviceNameAndTP);
 
             }
         };
@@ -665,30 +613,22 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
-                if(!foundDevices.isEmpty())
-                {
-                    for(SalutDevice found : foundDevices)
-                    {
-                        if(found.deviceName.equals(device.deviceName))
-                        {
+                if (!foundDevices.isEmpty()) {
+                    for (SalutDevice found : foundDevices) {
+                        if (found.deviceName.equals(device.deviceName)) {
                             return;
                         }
                     }
                 }
 
-                if(record.containsValue(thisDevice.serviceName))
-                {
+                if (record.containsValue(thisDevice.serviceName)) {
                     SalutDevice foundDevice = new SalutDevice(device, record);
                     foundDevices.add(foundDevice);
 
-                    if(callContinously)
-                    {
+                    if (callContinously) {
                         onDeviceFound.call();
-                    }
-                    else
-                    {
-                        if(!firstDeviceAlreadyFound)
-                        {
+                    } else {
+                        if (!firstDeviceAlreadyFound) {
                             onDeviceFound.call();
                             firstDeviceAlreadyFound = true;
                         }
@@ -701,8 +641,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         respondersAlreadySet = true;
     }
 
-    private void setupDNSRespondersWithDevice(final SalutDeviceCallback onDeviceFound, final boolean callContinously)
-    {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void setupDNSRespondersWithDevice(final SalutDeviceCallback onDeviceFound, final boolean callContinously) {
          /*Here, we register a listener for when services are actually found. The WiFi P2P specification notes that we need two types of
          *listeners, one for a DNS service and one for a TXT record. The DNS service listener is invoked whenever a service is found, regardless
          *of whether or not it is yours. To that determine if it is, we must compare our service name with the service name. If it is our service,
@@ -712,7 +652,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             @Override
             public void onDnsSdServiceAvailable(String instanceName, String serviceNameAndTP, WifiP2pDevice sourceDevice) {
 
-                Log.d(TAG, "Found " + instanceName +  " " + serviceNameAndTP);
+                Log.d(TAG, "Found " + instanceName + " " + serviceNameAndTP);
             }
         };
 
@@ -724,30 +664,22 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
 
 
-                if(!foundDevices.isEmpty())
-                {
-                    for(SalutDevice found : foundDevices)
-                    {
-                        if(found.deviceName.equals(device.deviceName))
-                        {
+                if (!foundDevices.isEmpty()) {
+                    for (SalutDevice found : foundDevices) {
+                        if (found.deviceName.equals(device.deviceName)) {
                             return;
                         }
                     }
                 }
 
-                if(record.containsValue(thisDevice.serviceName))
-                {
+                if (record.containsValue(thisDevice.serviceName)) {
                     SalutDevice foundDevice = new SalutDevice(device, record);
 
                     foundDevices.add(foundDevice);
-                    if(callContinously)
-                    {
+                    if (callContinously) {
                         onDeviceFound.call(foundDevice);
-                    }
-                    else
-                    {
-                        if(!firstDeviceAlreadyFound)
-                        {
+                    } else {
+                        if (!firstDeviceAlreadyFound) {
                             onDeviceFound.call(foundDevice);
                             firstDeviceAlreadyFound = true;
                         }
@@ -764,12 +696,10 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(connectingIsCanceled)
-                {
+                if (connectingIsCanceled) {
                     connectingIsCanceled = false;
                     cleanUpFunction.call();
-                }
-                else {
+                } else {
                     if (foundDevices.isEmpty()) {
                         cleanUpFunction.call();
                     } else {
@@ -781,15 +711,13 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         }, timeout);
     }
 
-
-    private void discoverNetworkServices(final SalutCallback deviceNotSupported)
-    {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void discoverNetworkServices(final SalutCallback deviceNotSupported) {
         isDiscovering = true;
 
         foundDevices.clear();
 
-        if(!receiverRegistered)
-        {
+        if (!receiverRegistered) {
             Log.v(Salut.TAG, "Registered Salut reciever.");
             dataReceiver.context.registerReceiver(receiver, intentFilter);
             receiverRegistered = true;
@@ -805,6 +733,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                     public void onSuccess() {
                         Log.v(TAG, "Service discovery request acknowledged.");
                     }
+
                     @Override
                     public void onFailure(int arg0) {
                         Log.e(TAG, "Failed adding service discovery request.");
@@ -831,30 +760,24 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
 
     }
 
-    public void discoverNetworkServices(SalutDeviceCallback onDeviceFound, boolean callContinously)
-    {
-        if(!respondersAlreadySet)
-        {
+    public void discoverNetworkServices(SalutDeviceCallback onDeviceFound, boolean callContinously) {
+        if (!respondersAlreadySet) {
             setupDNSRespondersWithDevice(onDeviceFound, callContinously);
         }
 
         discoverNetworkServices(deviceNotSupported);
     }
 
-    public void discoverNetworkServices(SalutCallback onDeviceFound, boolean callContinously)
-    {
-        if(!respondersAlreadySet)
-        {
+    public void discoverNetworkServices(SalutCallback onDeviceFound, boolean callContinously) {
+        if (!respondersAlreadySet) {
             setupDNSResponders(onDeviceFound, callContinously);
         }
 
         discoverNetworkServices(deviceNotSupported);
     }
 
-    public void discoverWithTimeout(SalutCallback onDevicesFound, SalutCallback onDevicesNotFound, int timeout)
-    {
-        if(!respondersAlreadySet)
-        {
+    public void discoverWithTimeout(SalutCallback onDevicesFound, SalutCallback onDevicesNotFound, int timeout) {
+        if (!respondersAlreadySet) {
             setupDNSResponders();
         }
 
@@ -862,9 +785,9 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
         devicesNotFoundInTime(onDevicesNotFound, onDevicesFound, timeout);
     }
 
-    public void stopNetworkService(final boolean disableWiFi)
-    {
-        if(isRunningAsHost) {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void stopNetworkService(final boolean disableWiFi) {
+        if (isRunningAsHost) {
             Log.v(TAG, "Stopping network service...");
             stopServiceDiscovery(true);
             closeDataSocket();
@@ -881,8 +804,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                     @Override
                     public void onSuccess() {
                         Log.v(TAG, "Successfully shutdown service.");
-                        if(disableWiFi)
-                        {
+                        if (disableWiFi) {
                             disableWiFi(dataReceiver.context); //Called here to give time for request to be disposed.
                         }
                         isRunningAsHost = false;
@@ -892,23 +814,20 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener{
                 respondersAlreadySet = false;
             }
 
-        }
-        else
-        {
+        } else {
             Log.d(TAG, "Network service is not running.");
         }
     }
 
-    public void stopServiceDiscovery(boolean shouldUnregister)
-    {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void stopServiceDiscovery(boolean shouldUnregister) {
         isDiscovering = false;
         firstDeviceAlreadyFound = false;
 
-        if(isConnectedToAnotherDevice)
+        if (isConnectedToAnotherDevice)
             disconnectFromDevice();
 
-        if(shouldUnregister)
-        {
+        if (shouldUnregister) {
             Log.v(Salut.TAG, "Unregistered Salut reciever.");
             dataReceiver.context.unregisterReceiver(receiver);
             receiverRegistered = false;

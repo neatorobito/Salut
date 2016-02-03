@@ -4,18 +4,15 @@ import android.util.Log;
 
 import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
-import com.google.common.base.Charsets;
 import com.peak.salut.Callbacks.SalutCallback;
 
+import org.apache.commons.io.Charsets;
+
 import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- * Created by markrjr on 6/8/15.
- */
-public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob{
+public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob {
 
     private final int BUFFER_SIZE = 65536;
     private Salut salutInstance;
@@ -23,8 +20,7 @@ public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob{
     private SalutCallback onFailure;
     private SalutDevice device;
 
-    public BackgroundDataSendJob(SalutDevice device, Salut salutInstance, Object data, SalutCallback onFailure)
-    {
+    public BackgroundDataSendJob(SalutDevice device, Salut salutInstance, Object data, SalutCallback onFailure) {
         this.data = data;
         this.device = device;
         this.salutInstance = salutInstance;
@@ -60,12 +56,9 @@ public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob{
                 onFailure.call();
             ex.printStackTrace();
         } finally {
-            try
-            {
+            try {
                 dataSocket.close();
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 Log.e(Salut.TAG, "Failed to close data socket.");
             }
 

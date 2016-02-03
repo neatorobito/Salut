@@ -31,8 +31,8 @@ public class SalutDevice {
     @JsonField
     protected String serviceAddress;
 
-
-    public SalutDevice(){}
+    public SalutDevice() {
+    }
 
     public SalutDevice(WifiP2pDevice device, Map<String, String> txtRecord) {
         this.serviceName = txtRecord.get("SERVICE_NAME");
@@ -44,12 +44,8 @@ public class SalutDevice {
 
     }
 
-
     @Override
-    public String toString()
-    {
+    public String toString() {
         return String.format("Salut Device | Service Name: %s TTP: %s Human-Readable Name: %s", instanceName, TTP, readableName);
     }
-
-
 }
