@@ -6,8 +6,7 @@ public class SalutServiceData {
 
     protected HashMap<String, String> serviceData;
 
-    public SalutServiceData(String serviceName, int port, String instanceName)
-    {
+    public SalutServiceData(String serviceName, int port, String instanceName) {
         serviceData = new HashMap<>();
         serviceData.put("SERVICE_NAME", "_" + serviceName);
         serviceData.put("SERVICE_PORT", "" + port);

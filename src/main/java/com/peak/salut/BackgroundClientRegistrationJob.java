@@ -6,16 +6,13 @@ import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.peak.salut.Callbacks.SalutCallback;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob{
-
+public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob {
 
     private Salut salutInstance;
     private InetSocketAddress hostDeviceAddress;
@@ -27,8 +24,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
     protected static SalutCallback onUnregisterFailure;
 
 
-    public BackgroundClientRegistrationJob(Salut salutInstance, InetSocketAddress hostDeviceAddress)
-    {
+    public BackgroundClientRegistrationJob(Salut salutInstance, InetSocketAddress hostDeviceAddress) {
         this.hostDeviceAddress = hostDeviceAddress;
         this.salutInstance = salutInstance;
     }
@@ -39,8 +35,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
         Log.d(Salut.TAG, "\nAttempting to transfer registration data with the server...");
         Socket registrationSocket = new Socket();
 
-        try
-        {
+        try {
             registrationSocket.connect(hostDeviceAddress);
             registrationSocket.setReceiveBufferSize(BUFFER_SIZE);
             registrationSocket.setSendBufferSize(BUFFER_SIZE);
@@ -58,8 +53,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             toClient.flush();
 
 
-            if(!salutInstance.thisDevice.isRegistered)
-            {
+            if (!salutInstance.thisDevice.isRegistered) {
                 Log.v(Salut.TAG, "Receiving server registration data...");
                 String serializedServer = fromServer.readUTF();
                 SalutDevice serverDevice = LoganSquare.parse(serializedServer, SalutDevice.class);
@@ -79,8 +73,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 });
 
                 salutInstance.startListeningForData();
-            }
-            else {
+            } else {
 
                 String registrationCode = fromServer.readUTF(); //TODO Use to verify
 
@@ -89,7 +82,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 salutInstance.closeDataSocket();
                 salutInstance.disconnectFromDevice();
 
-                if(onUnregisterSuccess != null) //Success Callback.
+                if (onUnregisterSuccess != null) //Success Callback.
                 {
                     salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
                         @Override
@@ -106,9 +99,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             toClient.close();
             fromServer.close();
 
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             ex.printStackTrace();
 
             Log.e(Salut.TAG, "An error occurred while attempting to register or unregister.");
@@ -117,31 +108,25 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 public void run() {
                     if (onRegistrationFail != null && !salutInstance.thisDevice.isRegistered) //Prevents both callbacks from being called.
                         onRegistrationFail.call();
-                    if(onUnregisterFailure != null)
+                    if (onUnregisterFailure != null)
                         onUnregisterFailure.call();
 
                 }
             });
 
 
-            if(salutInstance.thisDevice.isRegistered && salutInstance.isConnectedToAnotherDevice)
-            {
+            if (salutInstance.thisDevice.isRegistered && salutInstance.isConnectedToAnotherDevice) {
                 //Failed to unregister so an outright disconnect is necessary.
                 salutInstance.disconnectFromDevice();
             }
-        }
-        finally {
+        } finally {
 
-            if(disableWiFiOnUnregister)
-            {
+            if (disableWiFiOnUnregister) {
                 Salut.disableWiFi(salutInstance.dataReceiver.activity);
             }
-            try
-            {
+            try {
                 registrationSocket.close();
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 Log.e(Salut.TAG, "Failed to close registration socket.");
             }
         }

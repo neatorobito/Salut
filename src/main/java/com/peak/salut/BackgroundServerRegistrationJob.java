@@ -5,19 +5,16 @@ import android.util.Log;
 import com.arasthel.asyncjob.AsyncJob;
 import com.bluelinelabs.logansquare.LoganSquare;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob{
+public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob {
 
     private Salut salutInstance;
     private Socket clientSocket;
 
-    public BackgroundServerRegistrationJob(Salut salutInstance, Socket clientSocket)
-    {
+    public BackgroundServerRegistrationJob(Salut salutInstance, Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.salutInstance = salutInstance;
     }
@@ -68,10 +65,8 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                 toClient.writeUTF(Salut.UNREGISTER_CODE);
                 toClient.flush();
 
-                for(SalutDevice registered : salutInstance.registeredClients)
-                {
-                    if(registered.serviceAddress.equals(clientSocket.getInetAddress().toString().replace("/", "")))
-                    {
+                for (SalutDevice registered : salutInstance.registeredClients) {
+                    if (registered.serviceAddress.equals(clientSocket.getInetAddress().toString().replace("/", ""))) {
                         salutInstance.registeredClients.remove(registered);
                         Log.d(Salut.TAG, "\nSuccesfully unregistered device.\n");
                     }
@@ -84,14 +79,10 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.e(Salut.TAG, "An error occurred while dealing with registration for a client.");
-        }
-        finally {
-            try
-            {
+        } finally {
+            try {
                 clientSocket.close();
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Log.e(Salut.TAG, "Failed to close registration socket.");
             }
         }
