@@ -103,7 +103,7 @@ Finally, create a `Salut` instance.
     
 ```
 
-**Additionally, it's good practice, when working with this library, to keep a variable specific to your application indicating whether or not that instance is the host. The boolean field `isRunningAsHost` is provided as part of the framwork and does indicate in some cases if you're running as the host, but this is only based on whether or not the framework is connected to a device as the group owner and the host server is running.**
+**It's a good practice when working with this library to keep a variable specific to your application indicating whether or not that instance is the host. The boolean field `isRunningAsHost` is provided as part of the framwork and does indicate in some cases if you're running as the host, but this is only based on whether or not the framework is connected to a device as the group owner and the host server is running.**
 
 **There are obviously other scenarios in which an instance of your app may have not yet started a network service, but could still be considered the host.**
 
