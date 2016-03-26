@@ -340,7 +340,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener {
                 sendData(registered, data, onFailure);
             }
         } else {
-            Log.e(TAG, "This device is not the host, and therefore cannot invoke this method.");
+            Log.e(TAG, "This device is not the host and therefore cannot invoke this method.");
         }
     }
 
