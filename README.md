@@ -27,7 +27,7 @@ This library is currently in beta so functionality or APIs are subject to change
 
 ###Why the name? What does it mean?
 
-Salut is a French greeting. It's another way to say hello or goodbye. Apple's technology used in iOS to do something similar thing is called Bonjour.
+Salut is a French greeting. It's another way to say hello or goodbye. Apple's technology used in iOS to do something similar is called Bonjour.
 
 ##Dependencies
 
