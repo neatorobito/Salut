@@ -87,7 +87,7 @@ Then, we need to create a `SalutDataReceiver` and a `SalutServiceData` object.
     SalutServiceData serviceData = new SalutServiceData("sas", 50489, superAwesomeUser.name);
 ```
 
-`SalutDataReceiver` takes two arguments, `(Activity activity, SalutDataCallback dataCallback)`. In the example above, our activity implements `SalutDataCallback`, so we pass it in twice. Passing in an activity in general allows Salut to automatically register and unregister the neccessary broadcast receivers for you app.
+`SalutDataReceiver` takes two arguments, `(Activity activity, SalutDataCallback dataCallback)`. In the example above, our activity implements `SalutDataCallback`, so we pass it in twice. Passing in an activity in general allows Salut to automatically register and unregister the neccessary broadcast receivers for your app.
 
 `SalutServiceData` takes in a service name, a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic. **Use relatively small strings for both the service name and readable names if you plan to support lower than Android 5.0, as there is a limitation on the size that those values can be. This is imposed by the system itself.**
 
@@ -148,7 +148,7 @@ There are several methods to discover services. **Salut will only connect to fou
 
 For both of these methods you must pass in a boolean indicating wether or not you want your callback to be called repeatedly. So if **true**, the framework will call your callback each time a device is discovered. If **false** the framework will call your callback only once, when the first device is discovered. **Regardless of which boolean you pass in, the framework will continue to discover services until you manually call `stopServiceDiscovery()`.**
 
-Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as it's name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the entire list of found devices using the `foundDevices` field of your instance.**
+Lastly, there is the `discoverNetworkServicesWithTimeout()` method, which as its name implies, discovers devices for a set amount of time that you pass in, and then automatically calls the `stopServiceDiscovery()` method. **You can access the entire list of found devices using the `foundDevices` field of your instance.**
 
 ```java
     network.discoverNetworkServicesWithTimeout(new SalutCallback() {
@@ -183,7 +183,7 @@ This method will actually make the devices connect using WiFi Direct. The framew
 
 ###Crafting your data
 
-LoganSquare, which is the library that is responsible for serializing data within the library will not actually allow the sending of straight strings back and forth. So, you'll have to create a class to wrap the data that you want to send.
+LoganSquare, which is the library that is responsible for serializing data within the library, will not actually allow the sending of straight strings back and forth. So, you'll have to create a class to wrap the data that you want to send.
 
 ```java
 @JsonObject
@@ -222,7 +222,7 @@ To send data to all devices:
     });
 ```
 
-Only the host, which has the addresses of all devices may invoke the above method. This may be changed in a future release to allow client devices to send data to all other client devices as well. As a current workaround, you could first send data to the host for approval and then inkvoke the above method. Below, however, are the current methods for clients.
+Only the host, which has the addresses of all devices, may invoke the above method. This may be changed in a future release to allow client devices to send data to all other client devices as well. As a current workaround, you could first send data to the host for approval and then inkvoke the above method. Below, however, are the current methods for clients.
 
 To send data to a specific device:
 
@@ -256,7 +256,7 @@ Data is received as a string so that you can parse it yourself instead of Salut 
 
 This is particularly useful because it means that you can create a sort of God object that will hold all your data types and is serializable. *(See LoganSquare's pages [here](https://github.com/bluelinelabs/LoganSquare/blob/master/docs/Models.md) and [here](https://github.com/bluelinelabs/LoganSquare/blob/master/docs/TypeConverters.md) for more information on this, it supports many built-in types.)* 
 
-Or, you can add a header to the string indicating it's type and then strip the header from the string in the `onDataReceived()` method and parse the resulting object accordlingly.
+Or, you can add a header to the string indicating its type and then strip the header from the string in the `onDataReceived()` method and parse the resulting object accordlingly.
 
 Regardless of the whatever method you choose to define serialized data, parsing the data to get it back to another object will look like following.
 
