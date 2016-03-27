@@ -44,6 +44,18 @@ public class SalutDevice {
 
     }
 
+    public int getServicePort() {
+        return servicePort;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public String getServiceAddress() {
+        return serviceAddress;
+    }
+
     @Override
     public String toString() {
         return String.format("Salut Device | Service Name: %s TTP: %s Human-Readable Name: %s", instanceName, TTP, readableName);
