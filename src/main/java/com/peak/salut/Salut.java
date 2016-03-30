@@ -552,8 +552,8 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener {
     private void setupDNSResponders() {
          /*Here, we register a listener for when services are actually found. The WiFi P2P specification notes that we need two types of
          *listeners, one for a DNS service and one for a TXT record. The DNS service listener is invoked whenever a service is found, regardless
-         *of whether or not it is yours. To that determine if it is, we must compare our service name with the service name. If it is our service,
-         * we simply log.*/
+         *of whether or not it is yours. To that determine if it is, we must compare our service name with the service name which is done in the
+         * txtRecordListner below this ServiceResponseListener. Here, we simply log whether or not we've found a service.*/
 
         WifiP2pManager.DnsSdServiceResponseListener serviceListener = new WifiP2pManager.DnsSdServiceResponseListener() {
             @Override
@@ -565,8 +565,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener {
         };
 
         /*The TXT record contains specific information about a service and it's listener can also be invoked regardless of the device. Here, we
-        *double check if the device is ours, and then we go ahead and pull that specific information from it and put it into an Map. The function
-        *that was passed in early is also called.*/
+        *double check if the device is running our service, and then we go ahead and pull that specific information from it and put it into an Map.*/
         WifiP2pManager.DnsSdTxtRecordListener txtRecordListener = new WifiP2pManager.DnsSdTxtRecordListener() {
             @Override
             public void onDnsSdTxtRecordAvailable(String serviceFullDomainName, Map<String, String> record, WifiP2pDevice device) {
