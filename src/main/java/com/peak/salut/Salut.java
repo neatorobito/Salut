@@ -75,6 +75,7 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener {
     public ArrayList<SalutDevice> foundDevices;
     public ArrayList<SalutDevice> registeredClients;
 
+    protected SalutDeviceCallback onDeviceUnregistered;
 
     public Salut(SalutDataReceiver dataReceiver, SalutServiceData salutServiceData, SalutCallback deviceNotSupported) {
         WifiManager wifiMan = (WifiManager) dataReceiver.context.getSystemService(Context.WIFI_SERVICE);
@@ -156,6 +157,10 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener {
 
             }
         }
+    }
+
+    public void setOnDeviceUnregisteredCallback(SalutDeviceCallback callback) {
+        onDeviceUnregistered = callback;
     }
 
     public ArrayList<String> getReadableFoundNames() {
