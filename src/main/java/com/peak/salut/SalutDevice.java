@@ -69,15 +69,14 @@ public class SalutDevice {
         SalutDevice device = (SalutDevice) o;
 
         if (!deviceName.equals(device.deviceName)) return false;
-        if (!serviceName.equals(device.serviceName)) return false;
-        return instanceName.equals(device.instanceName);
+        return macAddress != null ? macAddress.equals(device.macAddress) : device.macAddress == null;
+
     }
 
     @Override
     public int hashCode() {
         int result = deviceName.hashCode();
-        result = 31 * result + serviceName.hashCode();
-        result = 31 * result + instanceName.hashCode();
+        result = 31 * result + (macAddress != null ? macAddress.hashCode() : 0);
         return result;
     }
 }
