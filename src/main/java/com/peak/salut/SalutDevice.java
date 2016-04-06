@@ -60,4 +60,24 @@ public class SalutDevice {
     public String toString() {
         return String.format("Salut Device | Service Name: %s TTP: %s Human-Readable Name: %s", instanceName, TTP, readableName);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SalutDevice device = (SalutDevice) o;
+
+        if (!deviceName.equals(device.deviceName)) return false;
+        if (!serviceName.equals(device.serviceName)) return false;
+        return instanceName.equals(device.instanceName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = deviceName.hashCode();
+        result = 31 * result + serviceName.hashCode();
+        result = 31 * result + instanceName.hashCode();
+        return result;
+    }
 }
