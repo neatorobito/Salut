@@ -183,7 +183,7 @@ This method will actually make the devices connect using WiFi Direct. The framew
 
 ###Crafting your data
 
-LoganSquare, which is the library that is responsible for serializing data within the library, will not actually allow the sending of straight strings back and forth. So, you'll have to create a class to wrap the data that you want to send.
+LoganSquare is responsible for data serialization within the library. LoganSquare will not actually allow the sending of simple strings between clients. So, you'll have to create a class to wrap the data that you want to send.
 
 ```java
 @JsonObject
