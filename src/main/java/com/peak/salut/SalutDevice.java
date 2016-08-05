@@ -44,8 +44,39 @@ public class SalutDevice {
 
     }
 
+    public int getServicePort() {
+        return servicePort;
+    }
+
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public String getServiceAddress() {
+        return serviceAddress;
+    }
+
     @Override
     public String toString() {
         return String.format("Salut Device | Service Name: %s TTP: %s Human-Readable Name: %s", instanceName, TTP, readableName);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SalutDevice device = (SalutDevice) o;
+
+        if (!deviceName.equals(device.deviceName)) return false;
+        return macAddress != null ? macAddress.equals(device.macAddress) : device.macAddress == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = deviceName.hashCode();
+        result = 31 * result + (macAddress != null ? macAddress.hashCode() : 0);
+        return result;
     }
 }

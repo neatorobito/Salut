@@ -65,9 +65,17 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                 toClient.writeUTF(Salut.UNREGISTER_CODE);
                 toClient.flush();
 
-                for (SalutDevice registered : salutInstance.registeredClients) {
+                for (final SalutDevice registered : salutInstance.registeredClients) {
                     if (registered.serviceAddress.equals(clientSocket.getInetAddress().toString().replace("/", ""))) {
                         salutInstance.registeredClients.remove(registered);
+                        if (salutInstance.onDeviceUnregistered != null) {
+                            salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    salutInstance.onDeviceUnregistered.call(registered);
+                                }
+                            });
+                        }
                         Log.d(Salut.TAG, "\nSuccesfully unregistered device.\n");
                     }
                 }
