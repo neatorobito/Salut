@@ -44,7 +44,7 @@ public class SalutDevice {
 
     }
 
-    public String getRecord(String name){
+    public String get(String name){
       return this.txtRecord.get(name);
     }
 
