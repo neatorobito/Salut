@@ -12,4 +12,8 @@ public class SalutServiceData {
         serviceData.put("SERVICE_PORT", "" + port);
         serviceData.put("INSTANCE_NAME", instanceName);
     }
+
+    public void put(String name, String value){
+      serviceData.put(name, value);
+    }
 }
