@@ -57,7 +57,7 @@ dependencies {
 
 ##Installation
 
-To install the library simply grab the newest version and it to your project's build.gradle file using [JitPack](https://jitpack.io/#deathslocus/Salut).
+To install the library simply grab the newest version and it to your project's build.gradle file using [JitPack](https://jitpack.io/#markrjr/Salut).
 
 ## Usage
 
