@@ -44,6 +44,10 @@ public class SalutDevice {
 
     }
 
+    public String get(String name){
+      return this.txtRecord.get(name);
+    }
+
     public int getServicePort() {
         return servicePort;
     }
