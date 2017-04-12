@@ -107,7 +107,7 @@ Finally, create a `Salut` instance.
 
 **There are obviously other scenarios in which an instance of your app may have not yet started a network service, but could still be considered the host.**
 
-###Working with services
+### Working with services
 
 Once you have your instance, you can create or discover WiFi direct services.
 
