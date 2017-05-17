@@ -1,14 +1,17 @@
 package com.peak.salut;
 
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @JsonObject
-public class SalutDevice {
+public class SalutDevice implements Parcelable {
 
     @JsonField
     public Map<String, String> txtRecord;
@@ -43,6 +46,68 @@ public class SalutDevice {
         this.txtRecord = txtRecord;
 
     }
+
+    protected SalutDevice(Parcel in) {
+        deviceName = in.readString();
+        serviceName = in.readString();
+        instanceName = in.readString();
+        readableName = in.readString();
+        isRegistered = in.readByte() != 0;
+        servicePort = in.readInt();
+        TTP = in.readString();
+        macAddress = in.readString();
+        serviceAddress = in.readString();
+        int mapSize = in.readInt();
+        if (mapSize < 0) {
+            txtRecord = null;
+        } else {
+            txtRecord = new HashMap<>(mapSize);
+            int i = 0;
+            while (i < mapSize) {
+                txtRecord.put(in.readString(), in.readString());
+                i++;
+            }
+        }
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(deviceName);
+        dest.writeString(serviceName);
+        dest.writeString(instanceName);
+        dest.writeString(readableName);
+        dest.writeByte((byte) (isRegistered ? 1 : 0));
+        dest.writeInt(servicePort);
+        dest.writeString(TTP);
+        dest.writeString(macAddress);
+        dest.writeString(serviceAddress);
+        if (txtRecord == null) {
+            dest.writeInt(-1);
+        } else {
+            dest.writeInt(txtRecord.size());
+            for (String key : txtRecord.keySet()) {
+                dest.writeString(key);
+                dest.writeString(txtRecord.get(key));
+            }
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<SalutDevice> CREATOR = new Creator<SalutDevice>() {
+        @Override
+        public SalutDevice createFromParcel(Parcel in) {
+            return new SalutDevice(in);
+        }
+
+        @Override
+        public SalutDevice[] newArray(int size) {
+            return new SalutDevice[size];
+        }
+    };
 
     public String get(String name){
       return this.txtRecord.get(name);
