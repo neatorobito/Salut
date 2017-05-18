@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-public class Salut implements WifiP2pManager.ConnectionInfoListener {
+public abstract class Salut implements WifiP2pManager.ConnectionInfoListener {
 
     protected static final String TAG = "Salut";
     private static final int SALUT_SERVER_PORT = 37500;
@@ -455,24 +455,25 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener {
         });
     }
 
-    public void createGroup(final SalutCallback onSuccess, final SalutCallback onFailure){       manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-       @Override
-       public void onSuccess() {
-          Log.v(TAG, "Successfully created group.");
-          Log.d(TAG, "Successfully created " + thisDevice.serviceName + " service running on port " + thisDevice.servicePort);
-          isRunningAsHost = true;
-          if (onSuccess != null) {
-              onSuccess.call();
-          }
-      }
+    public void createGroup(final SalutCallback onSuccess, final SalutCallback onFailure) {
+        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.v(TAG, "Successfully created group.");
+                Log.d(TAG, "Successfully created " + thisDevice.serviceName + " service running on port " + thisDevice.servicePort);
+                isRunningAsHost = true;
+                if (onSuccess != null) {
+                    onSuccess.call();
+                }
+            }
 
-       @Override
-       public void onFailure(int reason) {
-          Log.e(TAG, "Failed to create group. Reason :" + reason);
-          if (onFailure != null)
-              onFailure.call();
-       }
-       });
+            @Override
+            public void onFailure(int reason) {
+                Log.e(TAG, "Failed to create group. Reason :" + reason);
+                if (onFailure != null)
+                    onFailure.call();
+            }
+        });
 
     }
 
@@ -495,9 +496,9 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener {
             @Override
             public void onSuccess() {
                 Log.v(TAG, "Successfully added the local service.");
-               if(onSuccess != null)
-                onSuccess.call();
-   
+                if (onSuccess != null)
+                    onSuccess.call();
+
             }
 
             @Override
@@ -857,4 +858,6 @@ public class Salut implements WifiP2pManager.ConnectionInfoListener {
             });
         }
     }
+
+    public abstract String serialize(Object o);
 }

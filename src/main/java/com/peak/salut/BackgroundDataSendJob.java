@@ -3,14 +3,12 @@ package com.peak.salut;
 import android.util.Log;
 
 import com.arasthel.asyncjob.AsyncJob;
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.peak.salut.Callbacks.SalutCallback;
-
-import org.apache.commons.io.Charsets;
 
 import java.io.BufferedOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.charset.Charset;
 
 public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob {
 
@@ -42,9 +40,9 @@ public class BackgroundDataSendJob implements AsyncJob.OnBackgroundJob {
             Log.d(Salut.TAG, "Connected, transferring data...");
             BufferedOutputStream dataStreamToOtherDevice = new BufferedOutputStream(dataSocket.getOutputStream());
 
-            String dataToSend = LoganSquare.serialize(data);
+            String dataToSend = salutInstance.serialize(data);
 
-            dataStreamToOtherDevice.write(dataToSend.getBytes(Charsets.UTF_8));
+            dataStreamToOtherDevice.write(dataToSend.getBytes(Charset.forName("UTF-8")));
             dataStreamToOtherDevice.flush();
             dataStreamToOtherDevice.close();
 
