@@ -1,5 +1,7 @@
 package com.peak.salut;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.arasthel.asyncjob.AsyncJob;
@@ -44,12 +46,8 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob {
             Log.d(Salut.TAG, "\nSuccessfully received data.\n");
 
             if (!data.isEmpty()) {
-                salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        salutInstance.dataReceiver.dataCallback.onDataReceived(data);
-                    }
-                });
+                new Handler(Looper.getMainLooper()).post(
+                        () -> salutInstance.dataReceiver.dataCallback.onDataReceived(data));
             }
         } catch (Exception ex) {
             Log.e(Salut.TAG, "An error occurred while trying to receive data.");

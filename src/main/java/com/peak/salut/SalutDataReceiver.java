@@ -9,11 +9,9 @@ public class SalutDataReceiver {
 
     protected SalutDataCallback dataCallback;
     protected Context context;
-    protected Activity activity;
 
     public SalutDataReceiver(Activity activity, SalutDataCallback dataCallback) {
         this.dataCallback = dataCallback;
         this.context = activity.getApplicationContext();
-        this.activity = activity;
     }
 }

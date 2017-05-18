@@ -1,5 +1,7 @@
 package com.peak.salut;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.arasthel.asyncjob.AsyncJob;
@@ -50,12 +52,8 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                 salutInstance.registeredClients.add(clientDevice);
 
                 if (salutInstance.onDeviceRegisteredWithHost != null) {
-                    salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            salutInstance.onDeviceRegisteredWithHost.call(finalDevice);
-                        }
-                    });
+                    new Handler(Looper.getMainLooper()).post(
+                            () -> salutInstance.onDeviceRegisteredWithHost.call(finalDevice));
                 }
 
             } else {
@@ -65,20 +63,16 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                 toClient.writeUTF(Salut.UNREGISTER_CODE);
                 toClient.flush();
 
-                for (final SalutDevice registered : salutInstance.registeredClients) {
-                    if (registered.serviceAddress.equals(clientSocket.getInetAddress().toString().replace("/", ""))) {
-                        salutInstance.registeredClients.remove(registered);
-                        if (salutInstance.onDeviceUnregistered != null) {
-                            salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    salutInstance.onDeviceUnregistered.call(registered);
-                                }
-                            });
-                        }
-                        Log.d(Salut.TAG, "\nSuccesfully unregistered device.\n");
+                salutInstance.registeredClients.stream().filter(
+                        registered -> registered.serviceAddress.equals(clientSocket.getInetAddress()
+                                .toString().replace("/", ""))).forEach(registered -> {
+                    salutInstance.registeredClients.remove(registered);
+                    if (salutInstance.onDeviceUnregistered != null) {
+                        new Handler(Looper.getMainLooper()).post(
+                                () -> salutInstance.onDeviceUnregistered.call(registered));
                     }
-                }
+                    Log.d(Salut.TAG, "\nSuccesfully unregistered device.\n");
+                });
             }
 
             fromClient.close();
