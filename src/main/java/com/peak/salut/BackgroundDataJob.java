@@ -47,7 +47,12 @@ public class BackgroundDataJob implements AsyncJob.OnBackgroundJob {
 
             if (!data.isEmpty()) {
                 new Handler(Looper.getMainLooper()).post(
-                        () -> salutInstance.dataReceiver.dataCallback.onDataReceived(data));
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                salutInstance.dataReceiver.dataCallback.onDataReceived(data);
+                            }
+                        });
             }
         } catch (Exception ex) {
             Log.e(Salut.TAG, "An error occurred while trying to receive data.");

@@ -66,9 +66,12 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 Log.d(Salut.TAG, "Registered Host | " + salutInstance.registeredHost.deviceName);
 
                 salutInstance.thisDevice.isRegistered = true;
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    if (onRegistered != null)
-                        onRegistered.call();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (onRegistered != null)
+                            onRegistered.call();
+                    }
                 });
 
                 salutInstance.startListeningForData();
@@ -82,7 +85,12 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 salutInstance.disconnectFromDevice();
 
                 if (onUnregisterSuccess != null) { //Success Callback.
-                    new Handler(Looper.getMainLooper()).post(() -> onUnregisterSuccess.call());
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onUnregisterSuccess.call();
+                        }
+                    });
                 }
 
                 Log.d(Salut.TAG, "This device has successfully been unregistered from the server.");
@@ -96,11 +104,14 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             ex.printStackTrace();
 
             Log.e(Salut.TAG, "An error occurred while attempting to register or unregister.");
-            new Handler(Looper.getMainLooper()).post(() -> {
-                if (onRegistrationFail != null && !salutInstance.thisDevice.isRegistered) //Prevents both callbacks from being called.
-                    onRegistrationFail.call();
-                if (onUnregisterFailure != null)
-                    onUnregisterFailure.call();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (onRegistrationFail != null && !salutInstance.thisDevice.isRegistered) //Prevents both callbacks from being called.
+                        onRegistrationFail.call();
+                    if (onUnregisterFailure != null)
+                        onUnregisterFailure.call();
+                }
             });
 
             if (salutInstance.thisDevice.isRegistered && salutInstance.isConnectedToAnotherDevice) {

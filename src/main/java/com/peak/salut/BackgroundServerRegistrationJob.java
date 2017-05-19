@@ -53,7 +53,12 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
 
                 if (salutInstance.onDeviceRegisteredWithHost != null) {
                     new Handler(Looper.getMainLooper()).post(
-                            () -> salutInstance.onDeviceRegisteredWithHost.call(finalDevice));
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    salutInstance.onDeviceRegisteredWithHost.call(finalDevice);
+                                }
+                            });
                 }
 
             } else {
@@ -63,16 +68,22 @@ public class BackgroundServerRegistrationJob implements AsyncJob.OnBackgroundJob
                 toClient.writeUTF(Salut.UNREGISTER_CODE);
                 toClient.flush();
 
-                salutInstance.registeredClients.stream().filter(
-                        registered -> registered.serviceAddress.equals(clientSocket.getInetAddress()
-                                .toString().replace("/", ""))).forEach(registered -> {
-                    salutInstance.registeredClients.remove(registered);
-                    if (salutInstance.onDeviceUnregistered != null) {
-                        new Handler(Looper.getMainLooper()).post(
-                                () -> salutInstance.onDeviceUnregistered.call(registered));
+                for (final SalutDevice registered : salutInstance.registeredClients) {
+                    if (registered.serviceAddress.equals(clientSocket.getInetAddress()
+                            .toString().replace("/", ""))) {
+                        salutInstance.registeredClients.remove(registered);
+                        if (salutInstance.onDeviceUnregistered != null) {
+                            new Handler(Looper.getMainLooper()).post(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            salutInstance.onDeviceUnregistered.call(registered);
+                                        }
+                                    });
+                        }
+                        Log.d(Salut.TAG, "\nSuccesfully unregistered device.\n");
                     }
-                    Log.d(Salut.TAG, "\nSuccesfully unregistered device.\n");
-                });
+                }
             }
 
             fromClient.close();
