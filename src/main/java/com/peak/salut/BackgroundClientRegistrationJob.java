@@ -1,5 +1,7 @@
 package com.peak.salut;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.arasthel.asyncjob.AsyncJob;
@@ -64,7 +66,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 Log.d(Salut.TAG, "Registered Host | " + salutInstance.registeredHost.deviceName);
 
                 salutInstance.thisDevice.isRegistered = true;
-                salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         if (onRegistered != null)
@@ -82,9 +84,8 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
                 salutInstance.closeDataSocket();
                 salutInstance.disconnectFromDevice();
 
-                if (onUnregisterSuccess != null) //Success Callback.
-                {
-                    salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
+                if (onUnregisterSuccess != null) { //Success Callback.
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             onUnregisterSuccess.call();
@@ -103,17 +104,15 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
             ex.printStackTrace();
 
             Log.e(Salut.TAG, "An error occurred while attempting to register or unregister.");
-            salutInstance.dataReceiver.activity.runOnUiThread(new Runnable() {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
                     if (onRegistrationFail != null && !salutInstance.thisDevice.isRegistered) //Prevents both callbacks from being called.
                         onRegistrationFail.call();
                     if (onUnregisterFailure != null)
                         onUnregisterFailure.call();
-
                 }
             });
-
 
             if (salutInstance.thisDevice.isRegistered && salutInstance.isConnectedToAnotherDevice) {
                 //Failed to unregister so an outright disconnect is necessary.
@@ -122,7 +121,7 @@ public class BackgroundClientRegistrationJob implements AsyncJob.OnBackgroundJob
         } finally {
 
             if (disableWiFiOnUnregister) {
-                Salut.disableWiFi(salutInstance.dataReceiver.activity);
+                Salut.disableWiFi(salutInstance.dataReceiver.context);
             }
             try {
                 registrationSocket.close();
