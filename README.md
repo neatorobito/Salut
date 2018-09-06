@@ -47,11 +47,10 @@ buildscript {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
-apply plugin: 'com.neenbedankt.android-apt'
 
 dependencies {
-    apt 'com.bluelinelabs:logansquare-compiler:1.3.4'
-    compile 'com.bluelinelabs:logansquare:1.3.4'
+    annotationProcessor 'com.bluelinelabs:logansquare-compiler:1.3.4'
+    annotationProcessor 'com.bluelinelabs:logansquare:1.3.4'
 }
 ```
 
