@@ -1,5 +1,6 @@
 package com.peak.salut.demo
 
+import android.app.PendingIntent.getActivity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -8,6 +9,7 @@ import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import com.bluelinelabs.logansquare.LoganSquare
 import com.pascalwelsch.arrayadapter.ArrayAdapter
 import com.peak.salut.Callbacks.SalutCallback
@@ -70,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
             salut.startNetworkService({
                 connectedDevicesAdapter.add(it)
+                Toast.makeText(this.baseContext, it.readableName + " connected.", Toast.LENGTH_SHORT).show();
             }, {
                 Log.d(TAG, "Network service started")
             }, {
@@ -84,6 +87,7 @@ class MainActivity : AppCompatActivity() {
                 val salutDevice = connectedDevicesAdapter.getItem(position)
                 salut.registerWithHost(salutDevice, {
                     Log.d(TAG, "Successfully registered")
+                    Toast.makeText(this.baseContext, "Successfully connected to " + this.salut.registeredHost.readableName, Toast.LENGTH_SHORT).show();
                 }, {
                     Log.e(TAG, "Error registering")
                 })

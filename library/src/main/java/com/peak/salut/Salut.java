@@ -506,6 +506,7 @@ public abstract class Salut implements WifiP2pManager.ConnectionInfoListener {
                 Log.e(TAG, "Failed to create " + thisDevice.serviceName + " : Error Code: " + error);
                 if (onFailure != null)
                     onFailure.call();
+                isRunningAsHost = false;
             }
         });
     }
@@ -547,6 +548,8 @@ public abstract class Salut implements WifiP2pManager.ConnectionInfoListener {
         //In order to have a service that you create be seen, you must also actively look for other services. This is an Android bug.
         //For more information, read here. https://code.google.com/p/android/issues/detail?id=37425
         //We do not need to setup DNS responders.
+        isRunningAsHost = true;
+
         registeredClients = new ArrayList<>();
 
         this.onDeviceRegisteredWithHost = onDeviceRegisteredWithHost;
