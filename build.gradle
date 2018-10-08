@@ -1,41 +1,19 @@
-apply plugin: 'com.android.library'
+buildscript { 
+    ext.kotlin_version = '1.2.71'
 
-android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 3
-        versionName '0.3'
-        version 0.3
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    productFlavors {
-    }
-}
-
-buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.0'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        google()
     }
-}
-
-repositories {
-    jcenter()
-    mavenCentral()
-}
-
-dependencies {
-    compile 'com.android.support:support-annotations:25.3.1'
-    compile 'com.arasthel:asyncjob-library:1.0.3'
-    compile 'com.bluelinelabs:logansquare:1.0.6'
 }
