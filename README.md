@@ -39,18 +39,9 @@ This library depends on:
 **You must include LoganSquare.** To do so, add the following to your project's build.grade.
 
 ```groovy
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-    }
-}
-
 dependencies {
-    annotationProcessor 'com.bluelinelabs:logansquare-compiler:1.3.4'
-    annotationProcessor 'com.bluelinelabs:logansquare:1.3.4'
+    annotationProcessor 'com.bluelinelabs:logansquare-compiler:1.3.7'
+    implementation 'com.bluelinelabs:logansquare:1.3.7'
 }
 ```
 
@@ -61,6 +52,8 @@ To install the library simply grab the newest version and it to your project's b
 ## Usage
 
 ### [Sample Activity](https://gist.github.com/markrjr/0519268f69a5823da17b)
+
+There's also a demo app included with the library.
 
 ### Getting started
 
