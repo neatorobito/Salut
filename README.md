@@ -68,7 +68,7 @@ First, add the following permissions to your AndroidManifest.xml.
     <!--On Android you can't open sockets without the internet permission.-->
 ```
 
-*On Andorid 6.0 and up, these permissions are given to the app automatically. [(Read more here)](http://developer.android.com/guide/topics/security/normal-permissions.html)*
+*On Android 6.0 and up, these permissions are given to the app automatically. [(Read more here)](http://developer.android.com/guide/topics/security/normal-permissions.html)*
 
 Next, start by implementing the `SalutDataCallback` in the class that you would like to receive data. This callback as well as all others in the framework happen on the caller's thread.
 
@@ -79,7 +79,7 @@ Then, we need to create a `SalutDataReceiver` and a `SalutServiceData` object.
     SalutServiceData serviceData = new SalutServiceData("sas", 50489, superAwesomeUser.name);
 ```
 
-`SalutDataReceiver` takes two arguments, `(Activity activity, SalutDataCallback dataCallback)`. In the example above, our activity implements `SalutDataCallback`, so we pass it in twice. Passing in an activity in general allows Salut to automatically register and unregister the neccessary broadcast receivers for your app.
+`SalutDataReceiver` takes two arguments, `(Activity activity, SalutDataCallback dataCallback)`. In the example above, our activity implements `SalutDataCallback`, so we pass it in twice. Passing in an activity in general allows Salut to automatically register and unregister the necessary broadcast receivers for your app.
 
 `SalutServiceData` takes in a service name, a port, and an instance name. The instance name is basically a readable name that will be shown to users. So it's a good idea to make this something not cryptic. **Use relatively small strings for both the service name and readable names if you plan to support lower than Android 5.0, as there is a limitation on the size that those values can be. This is imposed by the system itself.**
 
@@ -95,7 +95,7 @@ Finally, create a `Salut` instance.
     
 ```
 
-**It's a good practice when working with this library to keep a variable specific to your application indicating whether or not that instance is the host. The boolean field `isRunningAsHost` is provided as part of the framwork and does indicate in some cases if you're running as the host, but this is only based on whether or not the framework is connected to a device as the group owner and the host server is running.**
+**It's a good practice when working with this library to keep a variable specific to your application indicating whether or not that instance is the host. The boolean field `isRunningAsHost` is provided as part of the framework and does indicate in some cases if you're running as the host, but this is only based on whether or not the framework is connected to a device as the group owner and the host server is running.**
 
 **There are obviously other scenarios in which an instance of your app may have not yet started a network service, but could still be considered the host.**
 
@@ -214,7 +214,7 @@ To send data to all devices:
     });
 ```
 
-Only the host, which has the addresses of all devices, may invoke the above method. This may be changed in a future release to allow client devices to send data to all other client devices as well. As a current workaround, you could first send data to the host for approval and then inkvoke the above method. Below, however, are the current methods for clients.
+Only the host, which has the addresses of all devices, may invoke the above method. This may be changed in a future release to allow client devices to send data to all other client devices as well. As a current workaround, you could first send data to the host for approval and then invoke the above method. Below, however, are the current methods for clients.
 
 To send data to a specific device:
 
@@ -248,7 +248,7 @@ Data is received as a string so that you can parse it yourself instead of Salut 
 
 This is particularly useful because it means that you can create a sort of God object that will hold all your data types and is serializable. *(See LoganSquare's pages [here](https://github.com/bluelinelabs/LoganSquare/blob/master/docs/Models.md) and [here](https://github.com/bluelinelabs/LoganSquare/blob/master/docs/TypeConverters.md) for more information on this, it supports many built-in types.)* 
 
-Or, you can add a header to the string indicating its type and then strip the header from the string in the `onDataReceived()` method and parse the resulting object accordlingly.
+Or, you can add a header to the string indicating its type and then strip the header from the string in the `onDataReceived()` method and parse the resulting object accordingly.
 
 Regardless of the whatever method you choose to define serialized data, parsing the data to get it back to another object will look like following.
 
